@@ -16,7 +16,7 @@
             android:value="1" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MemoCreateActivity"
+            android:name=".view.MemoCreateActivity"
             android:label="@string/title_activity_memo_create" >
         </activity>
     </application>

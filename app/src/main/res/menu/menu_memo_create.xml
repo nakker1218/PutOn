@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.nakanakashoshosho1218.memo_sample.MemoCreateActivity">
+    tools:context="com.nakanakashoshosho1218.memo_sample.view.MemoCreateActivity">
     <item
         android:id="@+id/save_menu"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="100"
         android:title="保存"
         app:showAsAction="ifRoom" />

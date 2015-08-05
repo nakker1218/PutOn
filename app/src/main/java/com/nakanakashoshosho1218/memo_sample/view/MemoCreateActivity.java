@@ -1,12 +1,16 @@
-package com.nakanakashoshosho1218.memo_sample;
+package com.nakanakashoshosho1218.memo_sample.view;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import java.text.SimpleDateFormat;
+import com.nakanakashoshosho1218.memo_sample.R;
+import com.nakanakashoshosho1218.memo_sample.controller.MemoAdapter;
+import com.nakanakashoshosho1218.memo_sample.model.Memo;
+
 import java.util.Date;
 
 
@@ -30,12 +34,16 @@ public class MemoCreateActivity extends ActionBarActivity {
     }
 
     private void saveMemo() {
-        memo.title = titleEditText.getText().toString();
-        memo.memo = memoEditText.getText().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final String title = titleEditText.getText().toString();
+        final String memo = memoEditText.getText().toString();
+
+        if (TextUtils.isEmpty(memo)) return;
+        this.memo.title = TextUtils.isEmpty(title) ? "無題のタイトル" : title;
+        this.memo.memo = memo;
         Date date = new Date(System.currentTimeMillis());
-        memo.date = dateFormat.format(date);
-        memo.save();
+        this.memo.date = Memo.DATE_FORMAT.format(date);
+        this.memo.save();
+
     }
 
     @Override
