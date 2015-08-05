@@ -38,10 +38,11 @@ public class MainActivity extends ActionBarActivity {
         Collections.sort(memoList, new Memo.DateTimeComparator());
         mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, memoList);
         mMemoListView.setAdapter(mMemoAdapter);
-        mMemoListView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mMemoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Memo memo = mMemoAdapter.getItem(position);
             }
         });
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
