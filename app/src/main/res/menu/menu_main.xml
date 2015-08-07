@@ -8,12 +8,15 @@
         android:icon="@mipmap/ic_delete"
         android:title="削除"
         android:orderInCategory="99"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:visible="false" />
+
     <item
-        android:id="@+id/add_menu"
-        android:icon="@mipmap/ic_add"
-        android:title="追加"
+        android:id="@+id/search_menu"
+        android:icon="@mipmap/ic_search"
+        android:title="検索"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:visible="true" />
 
 </menu>

@@ -54,11 +54,21 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         viewHolder.memoTextView.setText(memo.memo);
         viewHolder.dateTextView.setText(memo.date);
         if (mSelectMap.containsKey(memo) && mSelectMap.get(memo)) {
-            convertView.setBackgroundColor(getContext().getResources().getColor(R.color.secondary_text));
+            convertView.setBackgroundColor(getContext().getResources().getColor(R.color.list_pressed));
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);
         }
         return convertView;
+    }
+
+    public int getSelectCount(){
+        int count = 0;
+        for (Map.Entry<Memo, Boolean> set : mSelectMap.entrySet()) {
+            if (set.getValue()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void changeSelect(Memo memo) {

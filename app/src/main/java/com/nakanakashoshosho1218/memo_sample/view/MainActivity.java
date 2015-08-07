@@ -8,10 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
 import com.activeandroid.query.Select;
+import com.melnykov.fab.FloatingActionButton;
 import com.nakanakashoshosho1218.memo_sample.R;
 import com.nakanakashoshosho1218.memo_sample.controller.MemoAdapter;
 import com.nakanakashoshosho1218.memo_sample.model.Memo;
@@ -26,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
     private ListView mMemoListView;
     private Toolbar mainToolbar;
 
+    private Button searchButton;
+    private Button deleteButton;
+
     private MemoAdapter mMemoAdapter;
     private Memo mMemo;
 
@@ -37,7 +42,12 @@ public class MainActivity extends ActionBarActivity {
         mainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
         setSupportActionBar(mainToolbar);
 
-        mMemoListView = (ListView)findViewById(R.id.memo_ListView);
+        mMemoListView = (ListView) findViewById(R.id.memo_ListView);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton);
+        floatingActionButton.attachToListView(mMemoListView);
+        searchButton = (Button) findViewById(R.id.search_menu);
+        deleteButton = (Button) findViewById(R.id.delete_menu);
+
     }
 
     private void setMemoListView() {
@@ -48,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         mMemoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mMemo =  mMemoAdapter.getItem(position);
+                mMemo = mMemoAdapter.getItem(position);
                 Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
                 intent.putExtra("date", mMemo.date);
                 startActivity(intent);
@@ -61,16 +71,41 @@ public class MainActivity extends ActionBarActivity {
 
                 mMemo = mMemoAdapter.getItem(position);
                 mMemoAdapter.changeSelect(mMemo);
-                mainToolbar.setBackgroundColor(getResources().getColor(R.color.accent));
+                setToolbar();
                 return true;
             }
         });
+    }
+
+    private void setToolbar(){
+        int count = mMemoAdapter.getSelectCount();
+        mainToolbar.setBackgroundColor(
+                getResources()
+                        .getColor(
+                                count > 0 ?
+                                        R.color.toolbar_pressed : R.color.primary
+                        ));
+        Menu menu = mainToolbar.getMenu();
+        MenuItem menuDelete = menu.getItem(0);
+        MenuItem menuSearch = menu.getItem(1);
+        if (count > 0) {
+            menuDelete.setVisible(true);
+            menuSearch.setVisible(false);
+        } else {
+            menuDelete.setVisible(false);
+            menuSearch.setVisible(true);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setMemoListView();
+    }
+
+    public void addMemo(View v) {
+        Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -88,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.add_menu) {
+        if (id == R.id.search_menu) {
             Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
             startActivity(intent);
             return true;
@@ -96,6 +131,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.delete_menu) {
             mMemoAdapter.deleteAll();
+            setToolbar();
         }
 
         return super.onOptionsItemSelected(item);

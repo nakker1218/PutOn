@@ -90,11 +90,11 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.save_menu) {
-            saveMemo();
-            finish();
-            return true;
-        }
+//        if (id == R.id.save_menu) {
+//            saveMemo();
+//            finish();
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -12,13 +13,57 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary">
+
+       <!-- <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/toolar_action"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>-->
+
+
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/memo_ListView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadingEdge="none"
-        android:background="#FFFFFFFF"
-        android:dividerHeight="1dp" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/memo_ListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadingEdge="none"
+            android:background="#FFFFFFFF"
+            android:dividerHeight="1dp" />
+
+        <!--<Button-->
+
+        <!--android:layout_width="56dp"-->
+        <!--android:layout_height="56dp"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:background="@drawable/background_shape"-->
+        <!--android:elevation="8dp"-->
+        <!--android:stateListAnimator="@null"-->
+        <!--android:visibility="visible"-->
+        <!--android:onClick="floatingButton" />-->
+        <view
+            class="com.melnykov.fab.FloatingActionButton"
+            android:id="@+id/floatingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@mipmap/ic_add"
+            android:onClick="addMemo"
+            fab:fab_colorNormal="@color/primary"
+            fab:fab_colorPressed="@color/primary_dark" />
+    </FrameLayout>
 </LinearLayout>
