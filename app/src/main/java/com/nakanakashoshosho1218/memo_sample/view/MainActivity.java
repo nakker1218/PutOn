@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.support.v7.widget.Toolbar;
 
 import com.activeandroid.query.Select;
 import com.nakanakashoshosho1218.memo_sample.R;
@@ -22,13 +23,19 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
     private final static String LOG_TAG = MemoAdapter.class.getSimpleName();
 
-    ListView mMemoListView;
+    private ListView mMemoListView;
+    private Toolbar mainToolbar;
+
     private MemoAdapter mMemoAdapter;
+    private Memo mMemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
+        setSupportActionBar(mainToolbar);
 
         mMemoListView = (ListView)findViewById(R.id.memo_ListView);
     }
@@ -39,10 +46,12 @@ public class MainActivity extends ActionBarActivity {
         mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, memoList);
         mMemoListView.setAdapter(mMemoAdapter);
         mMemoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Memo memo = mMemoAdapter.getItem(position);
+                mMemo =  mMemoAdapter.getItem(position);
+                Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
+                intent.putExtra("date", mMemo.date);
+                startActivity(intent);
             }
         });
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -50,8 +59,9 @@ public class MainActivity extends ActionBarActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
 
-                Memo memo = mMemoAdapter.getItem(position);
-                mMemoAdapter.changeSelect(memo);
+                mMemo = mMemoAdapter.getItem(position);
+                mMemoAdapter.changeSelect(mMemo);
+                mainToolbar.setBackgroundColor(getResources().getColor(R.color.accent));
                 return true;
             }
         });
@@ -79,7 +89,7 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_menu) {
-            Intent intent = new Intent(MainActivity.this, MemoCreateActivity.class);
+            Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
             startActivity(intent);
             return true;
         }

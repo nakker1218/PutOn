@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nakanakashoshosho1218.memo_sample.view.MemoDetailActivity"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/memoDetail_Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"></android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/title_EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:background="@android:color/transparent"
+        android:textColor="@color/primary_text"
+        android:hint="タイトル" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <EditText
+        android:id="@+id/memo_EditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:textColor="@color/secondary_text"
+        android:hint="メモ"
+        android:gravity="top" />
+
+</LinearLayout>

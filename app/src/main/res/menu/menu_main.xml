@@ -5,13 +5,13 @@
 
     <item
         android:id="@+id/delete_menu"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@mipmap/ic_delete"
         android:title="削除"
         android:orderInCategory="99"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/add_menu"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@mipmap/ic_add"
         android:title="追加"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
