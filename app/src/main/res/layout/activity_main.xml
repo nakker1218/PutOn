@@ -14,49 +14,32 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary">
 
-       <!-- <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/toolar_action"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                />
-
-        </RelativeLayout>-->
-
-
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <ListView
             android:id="@+id/memo_ListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadingEdge="none"
-            android:background="#FFFFFFFF"
             android:dividerHeight="1dp" />
 
-        <!--<Button-->
+        <TextView
+            android:id="@+id/listEmpty_TextView"
+            android:text="@string/text_listview_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:textSize="24sp"
+            android:layout_gravity="center" />
 
-        <!--android:layout_width="56dp"-->
-        <!--android:layout_height="56dp"-->
-        <!--android:layout_margin="20dp"-->
-        <!--android:layout_gravity="bottom|right"-->
-        <!--android:background="@drawable/background_shape"-->
-        <!--android:elevation="8dp"-->
-        <!--android:stateListAnimator="@null"-->
-        <!--android:visibility="visible"-->
-        <!--android:onClick="floatingButton" />-->
         <view
             class="com.melnykov.fab.FloatingActionButton"
-            android:id="@+id/floatingButton"
+            android:id="@+id/create_FloatingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
