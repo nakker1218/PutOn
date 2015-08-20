@@ -1,4 +1,4 @@
-package com.shohei.put_on.view;
+package com.shohei.put_on.view.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +16,10 @@ import android.widget.SearchView;
 import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.MemoAdapter;
+import com.shohei.put_on.view.Adapter.MemoAdapter;
+import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.model.Memo;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,10 +33,6 @@ public class MainActivity extends ActionBarActivity {
 
     private MemoAdapter mMemoAdapter;
     private Memo mMemo;
-
-    private enum DayOfTheWeek{
-        SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
+                if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
 
                 mMemo = mMemoAdapter.getItem(position);
                 mMemoAdapter.changeSelect(mMemo);
@@ -91,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     //Toolbarの色とアイコンの変更
-    private void setToolbar(){
+    private void setToolbar() {
         int count = mMemoAdapter.getSelectCount();
         mMainToolbar.setBackgroundColor(
                 getResources()
@@ -109,21 +105,6 @@ public class MainActivity extends ActionBarActivity {
             menuDelete.setVisible(false);
             menuSearch.setVisible(true);
         }
-    }
-
-    //曜日を取得
-    private static int getDayOfTheWeek(){
-        Calendar calendar = Calendar.getInstance();
-        switch (calendar.get(Calendar.DAY_OF_WEEK)){
-            case Calendar.SUNDAY: return DayOfTheWeek.SUNDAY.ordinal();
-            case Calendar.MONDAY: return DayOfTheWeek.MONDAY.ordinal();
-            case Calendar.TUESDAY: return DayOfTheWeek.TUESDAY.ordinal();
-            case Calendar.WEDNESDAY: return DayOfTheWeek.WEDNESDAY.ordinal();
-            case Calendar.THURSDAY: return DayOfTheWeek.THURSDAY.ordinal();
-            case Calendar.FRIDAY: return DayOfTheWeek.FRIDAY.ordinal();
-            case Calendar.SATURDAY: return DayOfTheWeek.SATURDAY.ordinal();
-        }
-        throw new IllegalStateException();
     }
 
     @Override
@@ -156,6 +137,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.search_menu) {
             mSearchView = (SearchView) MenuItemCompat.getActionView(item);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
 
         if (id == R.id.delete_menu) {

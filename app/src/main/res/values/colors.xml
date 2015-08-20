@@ -9,6 +9,6 @@
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
-    <color name="toolbar_pressed">#C2185B</color>
+    <color name="toolbar_pressed">#ffc20069</color>
     <color name="list_pressed">#6666</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.shohei.put_on.view;
+package com.shohei.put_on.view.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,10 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.MemoAdapter;
+import com.shohei.put_on.view.Adapter.MemoAdapter;
 import com.shohei.put_on.model.Memo;
 
 import java.util.Date;
@@ -95,7 +94,6 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 //            finish();
 //            return true;
 //        }
-
         return super.onOptionsItemSelected(item);
     }
 

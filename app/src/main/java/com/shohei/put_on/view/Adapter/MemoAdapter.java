@@ -1,4 +1,4 @@
-package com.shohei.put_on.controller;
+package com.shohei.put_on.view.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.model.Memo;
 
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         return convertView;
     }
 
-    public int getSelectCount(){
+    public int getSelectCount() {
         int count = 0;
         for (Map.Entry<Memo, Boolean> set : mSelectMap.entrySet()) {
             if (set.getValue()) {
@@ -71,12 +72,13 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         return count;
     }
 
-    public void selectMemo(){
+    public void selectMemo() {
 
     }
 
     public void changeSelect(Memo memo) {
-        Log.d(LOG_TAG, "containsKey: " + mSelectMap.containsKey(memo));
+        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "containsKey: " + mSelectMap.containsKey(memo));
+
         if (mSelectMap.containsKey(memo)) {
             mSelectMap.put(memo, !mSelectMap.get(memo));
         } else {
@@ -85,10 +87,10 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         notifyDataSetChanged();
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         Set<Memo> memos = mSelectMap.keySet();
         for (Memo memo : memos) {
-            if (mSelectMap.get(memo)){
+            if (mSelectMap.get(memo)) {
                 remove(memo);
                 memo.delete();
             }
