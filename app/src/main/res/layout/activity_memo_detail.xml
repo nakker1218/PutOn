@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"></android.support.v7.widget.Toolbar>
+        android:background="?attr/colorPrimary" />
 
     <EditText
         android:id="@+id/title_EditText"
@@ -21,7 +21,7 @@
         android:padding="16dp"
         android:background="@android:color/transparent"
         android:textColor="@color/primary_text"
-        android:hint="タイトル" />
+        android:hint="Tag" />
 
     <View
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:textSize="14sp"
         android:background="@android:color/transparent"
         android:textColor="@color/secondary_text"
-        android:hint="メモ"
+        android:hint="Memo"
         android:maxLines="256"
         android:gravity="top" />
 

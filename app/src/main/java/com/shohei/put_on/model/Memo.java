@@ -16,18 +16,18 @@ import java.util.Date;
 public class Memo extends Model {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    @Column(name = "title")
-    public String title;
-
     @Column(name = "memo")
     public String memo;
+
+    @Column(name = "tag")
+    public String tag;
 
     @Column(name = "date")
     public String date;
 
     @Override
     public String toString() {
-        return title;
+        return tag;
     }
 
     public Date getUpdateTime() {

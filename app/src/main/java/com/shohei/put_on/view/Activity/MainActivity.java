@@ -16,6 +16,7 @@ import android.widget.SearchView;
 import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.utils.LocationUtil;
 import com.shohei.put_on.view.Adapter.MemoAdapter;
 import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.model.Memo;
@@ -44,19 +45,23 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setElevation(8);
 
         //ToolBarにアイコンを表示、アイコンをタップでListViewの一番上に
-//        mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-//        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mMemoListView.setSelection(0);
-//            }
-//        });
+        mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMemoListView.setSelection(0);
+            }
+        });
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
 
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.create_FloatingButton);
         floatingActionButton.attachToListView(mMemoListView);
+
+        LocationUtil locationUtil;
+        locationUtil = new LocationUtil(this);
+        locationUtil.getCurrentLocation();
     }
 
     private void setMemoListView() {
@@ -93,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
                 getResources()
                         .getColor(
                                 count > 0 ?
-                                        R.color.toolbar_pressed : R.color.primary
+                                        R.color.accent_red : R.color.primary
                         ));
         Menu menu = mMainToolbar.getMenu();
         MenuItem menuDelete = menu.getItem(0);
@@ -119,6 +124,10 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    private static List<Memo> getAllByMemo(String keyWord) {
+        return new Select().from(Memo.class).where("memo = ?", keyWord).orderBy("memo ASC").execute();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,7 +146,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.search_menu) {
             mSearchView = (SearchView) MenuItemCompat.getActionView(item);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+            getAllByMemo("ほげ");
         }
 
         if (id == R.id.delete_menu) {

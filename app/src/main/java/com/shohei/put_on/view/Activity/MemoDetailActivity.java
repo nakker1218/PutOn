@@ -13,8 +13,8 @@ import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
-import com.shohei.put_on.view.Adapter.MemoAdapter;
 import com.shohei.put_on.model.Memo;
+import com.shohei.put_on.view.Adapter.MemoAdapter;
 
 import java.util.Date;
 import java.util.List;
@@ -25,9 +25,7 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 
     private Memo memo;
 
-    private boolean mIsCreatedMode;
-
-    EditText titleEditText;
+    EditText tagEditText;
     EditText memoEditText;
 
     @Override
@@ -41,21 +39,21 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 
         memo = new Memo();
 
-        titleEditText = (EditText) findViewById(R.id.title_EditText);
+        tagEditText = (EditText) findViewById(R.id.title_EditText);
         memoEditText = (EditText) findViewById(R.id.memo_EditText);
 
-        titleEditText.addTextChangedListener(this);
+        tagEditText.addTextChangedListener(this);
         memoEditText.addTextChangedListener(this);
 
         setMemo();
     }
 
     private void saveMemo() {
-        final String title = titleEditText.getText().toString();
+        final String tag = tagEditText.getText().toString();
         final String memo = memoEditText.getText().toString();
 
         if (TextUtils.isEmpty(memo)) return;
-        this.memo.title = TextUtils.isEmpty(title) ? "無題のタイトル" : title;
+        this.memo.tag = TextUtils.isEmpty(tag) ? "tag" : tag;
         this.memo.memo = memo;
         Date date = new Date(System.currentTimeMillis());
         this.memo.date = Memo.DATE_FORMAT.format(date);
@@ -69,7 +67,7 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         if (!TextUtils.isEmpty(date)) {
             List<Memo> lists = new Select().from(Memo.class).where("date = ?", intent.getStringExtra("date")).execute();
             memo = lists.get(0);
-            titleEditText.setText(memo.title);
+            tagEditText.setText(memo.tag);
             memoEditText.setText(memo.memo);
         }
     }

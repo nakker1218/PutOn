@@ -6,9 +6,17 @@
     <color name="accent">#607D8B</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
+    <color name="date_text">#66727272</color>
+    <color name="tag_text">#5AE91E63</color>
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
-    <color name="toolbar_pressed">#ffc20069</color>
+    <color name="accent_red">#E91E63</color>
+    <color name="accent_red_dark">#C2185B</color>
     <color name="list_pressed">#6666</color>
+
+    <color name="accent_overlayView">#5F000000</color>
+    <color name="background_memo_editText">#3Cffffff</color>
+    <color name="background_title_editText">#5F000000</color>
+    <color name="memo_editText_text">#ff4b4b4b</color>
 </resources>

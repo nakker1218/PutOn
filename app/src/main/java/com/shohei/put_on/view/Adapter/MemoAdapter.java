@@ -42,7 +42,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(mResourceId, null);
             viewHolder = new ViewHolder();
-            viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.title_TextView);
+            viewHolder.tagTextView = (TextView) convertView.findViewById(R.id.tag_TextView);
             viewHolder.memoTextView = (TextView) convertView.findViewById(R.id.memo_TextView);
             viewHolder.dateTextView = (TextView) convertView.findViewById(R.id.date_TextView);
             convertView.setTag(viewHolder);
@@ -51,7 +51,11 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         }
 
         Memo memo = getItem(position);
-        viewHolder.titleTextView.setText(memo.title);
+        if (memo.tag == null) {
+            viewHolder.tagTextView.setVisibility(View.GONE);
+        } else {
+            viewHolder.tagTextView.setText(memo.tag);
+        }
         viewHolder.memoTextView.setText(memo.memo);
         viewHolder.dateTextView.setText(memo.date);
         if (mSelectMap.containsKey(memo) && mSelectMap.get(memo)) {
@@ -100,7 +104,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
     }
 
     private class ViewHolder {
-        TextView titleTextView;
+        TextView tagTextView;
         TextView memoTextView;
         TextView dateTextView;
     }
