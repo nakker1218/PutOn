@@ -25,9 +25,11 @@ import java.util.Set;
 public class MemoAdapter extends ArrayAdapter<Memo> {
     private final static String LOG_TAG = MemoAdapter.class.getSimpleName();
 
-    int mResourceId;
-    LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
+
     private Map<Memo, Boolean> mSelectMap;
+
+    int mResourceId;
 
     public MemoAdapter(Context context, int resource, List<Memo> objects) {
         super(context, resource, objects);
@@ -52,12 +54,10 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         }
 
         Memo memo = getItem(position);
-        if (memo.tag.isEmpty()) {
-            viewHolder.tagTextView.setVisibility(View.GONE);
+        if (memo.tag != null) {
+            viewHolder.tagTextView.setText(memo.tag);
         } else {
-//            viewHolder.tagTextView.setText(memo.buildTextTag(memo.tag));
-            String tag = memo.buildTextTag(memo.tag);
-            viewHolder.tagTextView.setText(tag.isEmpty() ? null : tag);
+            viewHolder.tagTextView.setVisibility(View.GONE);
         }
         viewHolder.memoTextView.setText(memo.memo);
         viewHolder.dateTextView.setText(memo.date);

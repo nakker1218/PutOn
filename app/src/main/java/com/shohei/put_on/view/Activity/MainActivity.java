@@ -2,7 +2,6 @@ package com.shohei.put_on.view.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +16,8 @@ import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.DebugUtil;
+import com.shohei.put_on.controller.utils.LayerService;
+import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.Adapter.MemoAdapter;
 
@@ -27,12 +28,13 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private Memo mMemo;
+    private MemoAdapter mMemoAdapter;
+    private ServiceRunningDetector mServiceRunningDetector;
+
     private ListView mMemoListView;
     private Toolbar mMainToolbar;
     private SearchView mSearchView;
-
-    private MemoAdapter mMemoAdapter;
-    private Memo mMemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,9 @@ public class MainActivity extends ActionBarActivity {
         mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, hoge);
         mMemoListView.setAdapter(mMemoAdapter);
         //------------------------------------------------------------------------//
+
+        mMemo = new Memo();
+        mServiceRunningDetector = new ServiceRunningDetector(this);
 
         setMemoListView();
     }
@@ -124,8 +129,13 @@ public class MainActivity extends ActionBarActivity {
 
     //FloatingActionButtonが押された時の処理
     public void addMemo(View v) {
-        Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
+//        startActivity(intent);
+
+        if (!mServiceRunningDetector.isServiceRunning()) {
+            startService(new Intent(MainActivity.this, LayerService.class));
+            Log.d(LOG_TAG, mServiceRunningDetector.isServiceRunning() + "");
+        }
     }
 
     private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
@@ -159,11 +169,11 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.search_menu) {
-            mSearchView = (SearchView) MenuItemCompat.getActionView(item);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mSearchView.setOnQueryTextListener(onQueryTextListener);
-        }
+//        if (id == R.id.search_menu) {
+//            mSearchView = (SearchView) MenuItemCompat.getActionView(item);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            mSearchView.setOnQueryTextListener(onQueryTextListener);
+//        }
 
         if (id == R.id.delete_menu) {
             mMemoAdapter.deleteAll();

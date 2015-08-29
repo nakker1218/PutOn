@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="ANDROID.PERMISSION.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name="com.activeandroid.app.Application"
@@ -33,6 +34,7 @@
             android:label="@string/title_activity_memo_create"
             android:parentActivityName=".view.Activity.MainActivity">
         </activity>
+        <service android:name=".controller.utils.LayerService"></service>
     </application>
 
 </manifest>

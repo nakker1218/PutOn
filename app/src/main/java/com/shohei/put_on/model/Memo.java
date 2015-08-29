@@ -1,5 +1,7 @@
 package com.shohei.put_on.model;
 
+import android.text.TextUtils;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -22,8 +24,7 @@ public class Memo extends Model {
     public String memo;
 
     @Column(name = "tag")
-//    public String[] tag = new String[3];
-    public ArrayList<String> tag = new ArrayList<>();
+    public String tag;
 
     @Column(name = "date")
     public String date;
@@ -33,7 +34,7 @@ public class Memo extends Model {
 
     @Override
     public String toString() {
-        return memo;
+        return tag;
     }
 
     public Date getUpdateTime() {
@@ -44,22 +45,34 @@ public class Memo extends Model {
             return null;
         }
     }
+
+
+    public void saveMemo(String memo, String tag) {
+        if (TextUtils.isEmpty(memo)) return;
+        this.tag = TextUtils.isEmpty(tag) ? "" : tag;
+        this.memo = memo;
+        Date date = new Date(System.currentTimeMillis());
+        this.date = Memo.DATE_FORMAT.format(date);
+
+        this.save();
+    }
+
     //Listのソート
     public static class DateTimeComparator implements Comparator<Memo> {
-
         @Override
         public int compare(Memo memo1, Memo memo2) {
             return (int) (memo2.getUpdateTime().getTime() - memo1.getUpdateTime().getTime());
         }
+
     }
 
-    public String buildTextTag(ArrayList<String> tag){
-        StringBuilder builder = new StringBuilder();
-        for (String string : tag){
-//        for (int i = 0; i < tag.size(); i++){
-//            String string = tag.get(i);
-            builder.append(string).append(" ");
-        }
-        return builder.toString();
-    }
+//    public String buildTextTag(ArrayList<String> tag){
+//        StringBuilder builder = new StringBuilder();
+//        for (String string : tag){
+////        for (int i = 0; i < tag.size(); i++){
+////            String string = tag.get(i);
+//            builder.append(string).append(" ");
+//        }
+//        return builder.toString();
+//    }
 }

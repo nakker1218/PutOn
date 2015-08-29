@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.nakanakashoshosho1218.memotest.view.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.shohei.put_on.view.widget.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <com.nakanakashoshosho1218.memotest.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -17,20 +17,20 @@
             android:background="@drawable/background_frame_border">
 
             <Button
-                android:id="@+id/save_Button"
+                android:id="@+id/save_Button_Overlay"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="bottom|right"
                 android:layout_margin="16dp"
-                android:background="@drawable/background_shape" />
+                android:background="@drawable/overlay_background_shape" />
 
             <Button
-                android:id="@+id/close_Button"
+                android:id="@+id/close_Button_Overlay"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="top|right"
                 android:layout_margin="12dp"
-                android:background="@drawable/cross" />
+                android:background="@mipmap/ic_cross" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                     android:background="@android:color/white" />
 
                 <EditText
-                    android:id="@+id/memo_EditText"
+                    android:id="@+id/memo_EditText_Overlay"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:textSize="20sp"
@@ -67,7 +67,7 @@
                     android:background="@android:color/white" />
 
                 <EditText
-                    android:id="@+id/title_EditText"
+                    android:id="@+id/tag_EditText_Overlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="16dp"
@@ -81,5 +81,5 @@
                     android:textColorHint="@android:color/white" />
             </LinearLayout>
         </FrameLayout>
-    </com.nakanakashoshosho1218.memotest.OverlayMemoView>
-</com.nakanakashoshosho1218.memotest.view.SlideLayout>
+    </com.shohei.put_on.view.widget.OverlayMemoView>
+</com.shohei.put_on.view.widget.SlideLayout>
