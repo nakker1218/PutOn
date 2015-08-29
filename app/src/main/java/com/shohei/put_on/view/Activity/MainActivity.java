@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -11,22 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.LocationUtil;
-import com.shohei.put_on.view.Adapter.MemoAdapter;
 import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.model.Memo;
+import com.shohei.put_on.view.Adapter.MemoAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
-    private final static String LOG_TAG = MemoAdapter.class.getSimpleName();
+    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private ListView mMemoListView;
     private Toolbar mMainToolbar;
@@ -43,9 +42,8 @@ public class MainActivity extends ActionBarActivity {
         mMainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
         setSupportActionBar(mMainToolbar);
         getSupportActionBar().setElevation(8);
-
-        //ToolBarにアイコンを表示、アイコンをタップでListViewの一番上に
         mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        //アイコンをタップでListViewの一番上に
         mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,9 +57,16 @@ public class MainActivity extends ActionBarActivity {
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.create_FloatingButton);
         floatingActionButton.attachToListView(mMemoListView);
 
-        LocationUtil locationUtil;
-        locationUtil = new LocationUtil(this);
-        locationUtil.getCurrentLocation();
+        //------------------------------------------------------------------------//
+        List<Memo> hoge = mMemoAdapter.getAllByTag("ほげ");
+        for (Memo piyo : hoge) {
+            Log.d(LOG_TAG, piyo.getId() + "," + piyo.memo  + "," + piyo.tag);
+        }
+        mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, hoge);
+        mMemoListView.setAdapter(mMemoAdapter);
+        //------------------------------------------------------------------------//
+
+        setMemoListView();
     }
 
     private void setMemoListView() {
@@ -97,8 +102,7 @@ public class MainActivity extends ActionBarActivity {
         mMainToolbar.setBackgroundColor(
                 getResources()
                         .getColor(
-                                count > 0 ?
-                                        R.color.accent_red : R.color.primary
+                                count > 0 ? R.color.accent_red : R.color.primary
                         ));
         Menu menu = mMainToolbar.getMenu();
         MenuItem menuDelete = menu.getItem(0);
@@ -115,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        setMemoListView();
+//        setMemoListView();
     }
 
     //FloatingActionButtonが押された時の処理
@@ -124,9 +128,21 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    private static List<Memo> getAllByMemo(String keyWord) {
-        return new Select().from(Memo.class).where("memo = ?", keyWord).orderBy("memo ASC").execute();
-    }
+    private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String searchWord) {
+            mSearchView.clearFocus();
+            Log.d(LOG_TAG, "onQueryTextSubmit" + searchWord);
+            mMemoAdapter.getAllByTag(searchWord);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            // 入力される度に呼び出される
+            return false;
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,7 +162,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.search_menu) {
             mSearchView = (SearchView) MenuItemCompat.getActionView(item);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getAllByMemo("ほげ");
+            mSearchView.setOnQueryTextListener(onQueryTextListener);
         }
 
         if (id == R.id.delete_menu) {

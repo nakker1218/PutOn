@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.model.Memo;
@@ -51,10 +52,12 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         }
 
         Memo memo = getItem(position);
-        if (memo.tag == null) {
+        if (memo.tag.isEmpty()) {
             viewHolder.tagTextView.setVisibility(View.GONE);
         } else {
-            viewHolder.tagTextView.setText(memo.tag);
+//            viewHolder.tagTextView.setText(memo.buildTextTag(memo.tag));
+            String tag = memo.buildTextTag(memo.tag);
+            viewHolder.tagTextView.setText(tag.isEmpty() ? null : tag);
         }
         viewHolder.memoTextView.setText(memo.memo);
         viewHolder.dateTextView.setText(memo.date);
@@ -74,10 +77,6 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
             }
         }
         return count;
-    }
-
-    public void selectMemo() {
-
     }
 
     public void changeSelect(Memo memo) {
@@ -103,9 +102,14 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         notifyDataSetChanged();
     }
 
+
+    public static List<Memo> getAllByTag(String keyWord) {
+        return new Select().from(Memo.class).where("memo = ?", keyWord).orderBy("memo ASC").execute();
+    }
+
     private class ViewHolder {
-        TextView tagTextView;
         TextView memoTextView;
+        TextView tagTextView;
         TextView dateTextView;
     }
 }

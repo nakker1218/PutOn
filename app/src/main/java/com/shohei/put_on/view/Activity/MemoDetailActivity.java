@@ -7,26 +7,31 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.utils.DebugUtil;
+import com.shohei.put_on.controller.utils.LocationUtil;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.Adapter.MemoAdapter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 public class MemoDetailActivity extends ActionBarActivity implements TextWatcher {
-    private final static String LOG_TAG = MemoAdapter.class.getSimpleName();
+    private final static String LOG_TAG = MemoDetailActivity.class.getSimpleName();
 
-    private Memo memo;
+    private Memo mMemo;
+    private LocationUtil mLocationUtil;
 
-    EditText tagEditText;
-    EditText memoEditText;
+    EditText mTagEditText;
+    EditText mMemoEditText;
+//    CheckBox mLocationCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,40 +42,62 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        memo = new Memo();
+        mMemo = new Memo();
 
-        tagEditText = (EditText) findViewById(R.id.title_EditText);
-        memoEditText = (EditText) findViewById(R.id.memo_EditText);
+        mTagEditText = (EditText) findViewById(R.id.title_EditText);
+        mMemoEditText = (EditText) findViewById(R.id.memo_EditText);
 
-        tagEditText.addTextChangedListener(this);
-        memoEditText.addTextChangedListener(this);
+        mTagEditText.addTextChangedListener(this);
+        mMemoEditText.addTextChangedListener(this);
+
+//        mLocationCheckBox = (CheckBox) findViewById(R.id.location_CheckBox);
+
+        mLocationUtil = new LocationUtil(this);
 
         setMemo();
     }
 
     private void saveMemo() {
-        final String tag = tagEditText.getText().toString();
-        final String memo = memoEditText.getText().toString();
+        final String tag = mTagEditText.getText().toString();
+        final String memo = mMemoEditText.getText().toString();
 
         if (TextUtils.isEmpty(memo)) return;
-        this.memo.tag = TextUtils.isEmpty(tag) ? "tag" : tag;
-        this.memo.memo = memo;
-        Date date = new Date(System.currentTimeMillis());
-        this.memo.date = Memo.DATE_FORMAT.format(date);
-        this.memo.save();
+        final String[] tagResult = tag.split("\\s+");
+        if (DebugUtil.DEBUG) Log.d(LOG_TAG, tagResult.length + "");
+        this.mMemo.tag = new ArrayList<>();
+        for (String string : tagResult) {
+            this.mMemo.tag.add(string);
+        }
 
+        this.mMemo.memo = memo;
+        Date date = new Date(System.currentTimeMillis());
+        this.mMemo.date = Memo.DATE_FORMAT.format(date);
+
+        this.mMemo.save();
     }
 
     public void setMemo() {
         Intent intent = getIntent();
         String date = intent.getStringExtra("date");
         if (!TextUtils.isEmpty(date)) {
-            List<Memo> lists = new Select().from(Memo.class).where("date = ?", intent.getStringExtra("date")).execute();
-            memo = lists.get(0);
-            tagEditText.setText(memo.tag);
-            memoEditText.setText(memo.memo);
+            List<Memo> lists = new Select().from(Memo.class).where("date = ?", date).execute();
+            mMemo = lists.get(0);
+            String tag = mMemo.buildTextTag(mMemo.tag);
+            mTagEditText.setText(tag.isEmpty() ? null : tag);
+            mMemoEditText.setText(mMemo.memo);
         }
     }
+
+//    public void locationCheckBox(View v){
+//        final boolean isChecked = ((CheckBox) v).isChecked();
+//        if (isChecked){
+//            mLocationUtil.requestLocation();
+//            mLocationCheckBox.setText(mMemo.address);
+//            if (DebugUtil.DEBUG) Log.d(LOG_TAG, mMemo.address);
+//        } else {
+//
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,16 +114,10 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.save_menu) {
-//            saveMemo();
-//            finish();
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 
-
-    int currentLength = 0;
+    private int currentLength = 0;
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
