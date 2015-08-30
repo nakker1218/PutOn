@@ -49,7 +49,6 @@ public class LayerService extends Service {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-//        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
