@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.widget.OverlayMemoView;
@@ -23,7 +24,7 @@ import com.shohei.put_on.view.widget.OverlayMemoView;
 /**
  * Created by nakayamashohei on 15/08/29.
  */
-public class LayerService extends Service {
+public class LayerService extends Service implements View.OnTouchListener {
     private final static String LOG_TAG = LayerService.class.getSimpleName();
 
     private Memo mMemo;
@@ -38,7 +39,11 @@ public class LayerService extends Service {
     private Button mSaveButton;
     private Button mCloseButton;
 
-    int mDisplayHeight;
+    private int initialX;
+    private int initialY;
+    private float initialTouchX;
+    private float initialTouchY;
+    private int mDisplayHeight;
 
     @Override
     public void onCreate() {
@@ -55,52 +60,13 @@ public class LayerService extends Service {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        // 画面サイズの取得
         Display display = mWindowManager.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         mDisplayHeight = size.y;
 
         mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        try {
-            mOverlayMemoView.setOnTouchListener(new View.OnTouchListener() {
-                private int initialX;
-                private int initialY;
-                private float initialTouchX;
-                private float initialTouchY;
-
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN: {
-                            initialX = mLayoutParams.x;
-                            initialY = mLayoutParams.y;
-                            initialTouchX = event.getRawX();
-                            initialTouchY = event.getRawY();
-                            break;
-                        }
-                        case MotionEvent.ACTION_MOVE: {
-                            final int x = initialX + (int) (event.getRawX() - initialTouchX);
-                            final int y = mDisplayHeight - (initialY + (int) (event.getRawY() - initialTouchY) + (mOverlayMemoView.getHeight() / 2));
-                            mLayoutParams.x = x;
-                            mLayoutParams.y = y;
-                            Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
-                            Log.d(LOG_TAG, "initialX:" + initialX + " initialY:" + initialY);
-                            Log.d(LOG_TAG, "getRawX:" + event.getRawX() + " getRawY:" + event.getRawY());
-                            Log.d(LOG_TAG, "initialTouchX:" + initialTouchX + " initialTouchY:" + initialTouchY);
-                            mWindowManager.updateViewLayout(view, mLayoutParams);
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP: {
-                            break;
-                        }
-                    }
-                    return false;
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -154,13 +120,31 @@ public class LayerService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-//    @Override
-//    public void onClosed(int vector) {
-//        ServiceRunningDetector serviceRunningDetector = new ServiceRunningDetector(this);
-//        if (serviceRunningDetector.isServiceRunning()) {
-//            this.stopSelf();
-//        }
-//    }
-
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                initialX = mLayoutParams.x;
+                initialY = mLayoutParams.y;
+                initialTouchX = event.getRawX();
+                initialTouchY = event.getRawY();
+                break;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                final int x = initialX + (int) (event.getRawX() - initialTouchX);
+                final int y = mDisplayHeight - (initialY + (int) (event.getRawY() - initialTouchY) + (mOverlayMemoView.getHeight() / 2));
+                mLayoutParams.x = x;
+                mLayoutParams.y = y;
+                if (DebugUtil.DEBUG)
+                    Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
+                mWindowManager.updateViewLayout(v, mLayoutParams);
+                break;
+            }
+            case MotionEvent.ACTION_UP: {
+                break;
+            }
+        }
+        return false;
+    }
 }
 

@@ -8,10 +8,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#ffffff">
-
+    android:background="@android:color/white">
 
     <TextView
+        tools:text="Memo"
         android:id="@+id/memo_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +19,7 @@
         android:textColor="@color/primary_text"
         android:ellipsize="end"
         android:maxLines="2"
-        android:scrollHorizontally="true"
-        tools:text="Memo"/>
+        android:scrollHorizontally="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,24 +28,22 @@
         android:paddingTop="4dp">
 
         <TextView
+            tools:text="date"
             android:id="@+id/date_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:textSize="14sp"
-            android:textColor="@color/date_text"
-            tools:text="date"/>
+            android:textColor="@color/date_text" />
 
         <TextView
+            tools:text="Tag"
             android:id="@+id/tag_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="14sp"
-            android:textColor="@color/tag_text"
-            tools:text="Tag" />
+            android:textColor="@color/tag_text" />
 
     </LinearLayout>
-
-
 </LinearLayout>

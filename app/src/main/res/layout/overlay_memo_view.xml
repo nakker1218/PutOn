@@ -1,86 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<com.shohei.put_on.view.widget.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@android:color/transparent">-->
+<com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="28dp"
+    android:paddingRight="28dp">
 
-    <com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="28dp"
-        android:paddingRight="28dp">
+        android:layout_height="match_parent"
+        android:background="@drawable/background_frame_border">
 
-        <FrameLayout
+        <Button
+            android:id="@+id/save_Button_Overlay"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:background="@drawable/overlay_background_shape" />
+
+        <Button
+            android:id="@+id/close_Button_Overlay"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="12dp"
+            android:background="@mipmap/ic_cross" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_frame_border">
+            android:orientation="vertical"
+            android:layout_margin="0.5dp">
 
-            <Button
-                android:id="@+id/save_Button_Overlay"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|right"
-                android:layout_margin="16dp"
-                android:background="@drawable/overlay_background_shape" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/primary_overlayView" />
 
-            <Button
-                android:id="@+id/close_Button_Overlay"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="top|right"
-                android:layout_marginTop="14dp"
-                android:layout_marginRight="12dp"
-                android:background="@mipmap/ic_cross" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/white" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/memo_EditText_Overlay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:gravity="top"
+                android:textSize="20sp"
+                android:padding="16dp"
+                android:background="@color/background_memo_editText"
+                android:textColor="@color/memo_editText_text"
+                android:hint="@string/hint_memo_editText"
+                android:textColorHint="@color/memo_editText_text" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/white" />
+
+            <EditText
+                android:id="@+id/tag_EditText_Overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="0.5dp">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@color/primary_overlayView" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@android:color/white" />
-
-                <EditText
-                    android:id="@+id/memo_EditText_Overlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:textSize="20sp"
-                    android:padding="16dp"
-                    android:background="@color/background_memo_editText"
-                    android:textColor="@color/memo_editText_text"
-                    android:gravity="top"
-                    android:maxLines="256"
-                    android:hint="Memo"
-                    android:textColorHint="@color/memo_editText_text" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@android:color/white" />
-
-                <EditText
-                    android:id="@+id/tag_EditText_Overlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:textSize="14sp"
-                    android:background="@color/background_title_editText"
-                    android:textColor="@android:color/white"
-                    android:hint="Tag"
-                    android:textColorHint="@android:color/white" />
-            </LinearLayout>
-        </FrameLayout>
-    </com.shohei.put_on.view.widget.OverlayMemoView>
-<!--</com.shohei.put_on.view.widget.SlideLayout>-->
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textSize="14sp"
+                android:background="@color/background_title_editText"
+                android:textColor="@android:color/white"
+                android:hint="@string/hint_tag_editText"
+                android:textColorHint="@android:color/white" />
+        </LinearLayout>
+    </FrameLayout>
+</com.shohei.put_on.view.widget.OverlayMemoView>

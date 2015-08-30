@@ -59,15 +59,6 @@ public class MainActivity extends ActionBarActivity {
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.create_FloatingButton);
         floatingActionButton.attachToListView(mMemoListView);
 
-        //------------------------------------------------------------------------//
-//        List<Memo> hoge = mMemoAdapter.getAllByTag("ほげ");
-//        for (Memo piyo : hoge) {
-//            Log.d(LOG_TAG, piyo.getId() + "," + piyo.memo  + "," + piyo.tag);
-//        }
-//        mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, hoge);
-//        mMemoListView.setAdapter(mMemoAdapter);
-        //------------------------------------------------------------------------//
-
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
 
@@ -130,26 +121,11 @@ public class MainActivity extends ActionBarActivity {
 //        startActivity(intent);
 
         if (!mServiceRunningDetector.isServiceRunning()) {
+            if (DebugUtil.DEBUG) Log.d(LOG_TAG, mServiceRunningDetector.isServiceRunning() + "");
             startService(new Intent(MainActivity.this, LayerService.class));
-            Log.d(LOG_TAG, mServiceRunningDetector.isServiceRunning() + "");
+            finish();
         }
     }
-
-    private SearchView.OnQueryTextListener onQueryTextListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String searchWord) {
-            mSearchView.clearFocus();
-            Log.d(LOG_TAG, "onQueryTextSubmit" + searchWord);
-            mMemoAdapter.getAllByTag(searchWord);
-            return true;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            // 入力される度に呼び出される
-            return false;
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,18 +141,10 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.search_menu) {
-//            mSearchView = (SearchView) MenuItemCompat.getActionView(item);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            mSearchView.setOnQueryTextListener(onQueryTextListener);
-//        }
-
         if (id == R.id.delete_menu) {
             mMemoAdapter.deleteAll();
             setToolbar();
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

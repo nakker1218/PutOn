@@ -18,23 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:gravity="top"
         android:textSize="20sp"
         android:padding="16dp"
         android:background="@android:color/transparent"
         android:textColor="@color/primary_text"
-        android:hint="Memo"
-        android:maxLines="256"
-        android:gravity="top" />
-
-    <!--<CheckBox-->
-        <!--android:id="@+id/location_CheckBox"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="位置情報を追加"-->
-        <!--android:layout_marginLeft="16dp"-->
-        <!--android:layout_marginBottom="4dp"-->
-        <!--android:textColor="@color/secondary_text"-->
-        <!--android:onClick="locationCheckBox"/>-->
+        android:hint="@string/hint_memo_editText" />
 
     <View
         android:layout_width="match_parent"
@@ -50,6 +39,6 @@
         android:padding="16dp"
         android:background="@android:color/transparent"
         android:textColor="@color/primary_text"
-        android:hint="Tag" />
+        android:hint="@string/hint_tag_editText" />
 
 </LinearLayout>

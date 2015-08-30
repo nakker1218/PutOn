@@ -16,37 +16,16 @@ import com.shohei.put_on.controller.utils.DebugUtil;
 public class OverlayMemoView extends LinearLayout {
     private final static String LOG_TAG = OverlayMemoView.class.getSimpleName();
 
-    private Context mContext;
-
-    private View mTargetView;
-
-
     public OverlayMemoView(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public OverlayMemoView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
     }
 
     public OverlayMemoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mContext = context;
-
-    }
-
-    public int getViewHeight(){
-        int height = this.getHeight();
-        return height;
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        if (getChildCount() > 0) {
-            mTargetView = getChildAt(0);
-            setTargetView(mTargetView);
-        }
     }
 
     @Override
@@ -54,7 +33,8 @@ public class OverlayMemoView extends LinearLayout {
         // タッチされたら最初に呼ばれる
         // ここでtrueを返せば親ViewのonTouchEvent
         // ここでfalseを返せば子ViewのonClickやらonLongClickやら
-        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "onInterceptTouchEvent/PointerCount: " + event.getAction());
+        if (DebugUtil.DEBUG)
+            Log.d(LOG_TAG, "onInterceptTouchEvent/PointerCount: " + event.getAction());
         if (event.getPointerCount() == 1) {
             return false;
         }
@@ -79,9 +59,5 @@ public class OverlayMemoView extends LinearLayout {
             return false;
         }
         return super.dispatchKeyEvent(event);
-    }
-
-    public void setTargetView(View targetView) {
-        this.mTargetView = targetView;
     }
 }

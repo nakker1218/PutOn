@@ -102,11 +102,6 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         notifyDataSetChanged();
     }
 
-
-    public static List<Memo> getAllByTag(String keyWord) {
-        return new Select().from(Memo.class).where("memo = ?", keyWord).orderBy("memo ASC").execute();
-    }
-
     private class ViewHolder {
         TextView memoTextView;
         TextView tagTextView;
