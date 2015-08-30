@@ -15,8 +15,8 @@ import android.widget.ListView;
 import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.service.LayerService;
 import com.shohei.put_on.controller.utils.DebugUtil;
-import com.shohei.put_on.controller.utils.LayerService;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.Adapter.MemoAdapter;
@@ -111,13 +111,10 @@ public class MainActivity extends ActionBarActivity {
                         ));
         Menu menu = mMainToolbar.getMenu();
         MenuItem menuDelete = menu.getItem(0);
-        MenuItem menuSearch = menu.getItem(1);
         if (count > 0) {
             menuDelete.setVisible(true);
-            menuSearch.setVisible(false);
         } else {
             menuDelete.setVisible(false);
-            menuSearch.setVisible(true);
         }
     }
 

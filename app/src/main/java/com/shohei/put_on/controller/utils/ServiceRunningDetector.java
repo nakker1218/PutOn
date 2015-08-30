@@ -3,6 +3,8 @@ package com.shohei.put_on.controller.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 
+import com.shohei.put_on.controller.service.LayerService;
+
 import java.util.List;
 
 /**

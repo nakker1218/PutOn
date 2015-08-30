@@ -34,7 +34,7 @@
             android:label="@string/title_activity_memo_create"
             android:parentActivityName=".view.Activity.MainActivity">
         </activity>
-        <service android:name=".controller.utils.LayerService"></service>
+        <service android:name=".controller.service.LayerService"></service>
     </application>
 
 </manifest>

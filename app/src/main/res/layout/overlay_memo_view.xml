@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shohei.put_on.view.widget.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+<!--<com.shohei.put_on.view.widget.SlideLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@android:color/transparent">-->
 
     <com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -82,4 +82,4 @@
             </LinearLayout>
         </FrameLayout>
     </com.shohei.put_on.view.widget.OverlayMemoView>
-</com.shohei.put_on.view.widget.SlideLayout>
+<!--</com.shohei.put_on.view.widget.SlideLayout>-->

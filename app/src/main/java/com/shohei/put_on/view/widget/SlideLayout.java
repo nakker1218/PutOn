@@ -1,7 +1,6 @@
 package com.shohei.put_on.view.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
@@ -95,7 +94,7 @@ public class SlideLayout extends ViewGroup {
             return false;
         }
 
-        mTargetView.setBackgroundColor(Color.BLUE);
+//        mTargetView.setBackgroundColor(Color.BLUE);
 
         final int action = MotionEventCompat.getActionMasked(event);
         final float x = event.getX();
@@ -136,11 +135,12 @@ public class SlideLayout extends ViewGroup {
         // ここでtrueを返すとイベントはここで終了
         // ここでfalseを返すと子ViewのonClickやらonLongClickやら
 
+        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "onTouchEvent/PointerCount: " + event.getAction());
         if (event.getPointerCount() == 1) {
             return false;
         }
 
-        mTargetView.setBackgroundColor(Color.RED);
+//        mTargetView.setBackgroundColor(Color.RED);
 
         if (DebugUtil.DEBUG) Log.d(LOG_TAG, "onTouchEvent");
         try {
@@ -188,17 +188,6 @@ public class SlideLayout extends ViewGroup {
                         smoothSlideTo(1f);
                     } else {
                         smoothSlideTo(0f);
-                    }
-                }
-                if (dx > 300) {
-                    if (DebugUtil.DEBUG) Log.d(LOG_TAG, "SwipeRight");
-                    if (mCloseListener != null) {
-                        mCloseListener.onClosed(0);
-                    }
-                } else if (dx < -300) {
-                    if (DebugUtil.DEBUG) Log.d(LOG_TAG, "SwipeLeft");
-                    if (mCloseListener != null) {
-                        mCloseListener.onClosed(1);
                     }
                 }
                 break;

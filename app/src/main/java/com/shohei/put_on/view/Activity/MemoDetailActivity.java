@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.activeandroid.query.Select;
@@ -22,7 +23,7 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
     private final static String LOG_TAG = MemoDetailActivity.class.getSimpleName();
 
     private Memo mMemo;
-    private LocationUtil mLocationUtil;
+//    private LocationUtil mLocationUtil;
 
     EditText mTagEditText;
     EditText mMemoEditText;
@@ -34,8 +35,16 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         setContentView(R.layout.activity_memo_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.memoDetail_Toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle(R.string.title_toolbar_detail_activity);
+        toolbar.setNavigationIcon(R.mipmap.ic_done);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String[] texts = getText();
+                mMemo.saveMemo(texts[0], texts[1]);
+                finish();
+            }
+        });
 
         mMemo = new Memo();
 
@@ -47,7 +56,7 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 
 //        mLocationCheckBox = (CheckBox) findViewById(R.id.location_CheckBox);
 
-        mLocationUtil = new LocationUtil(this);
+//        mLocationUtil = new LocationUtil(this);
 
         setMemo();
     }
@@ -73,6 +82,13 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 //
 //        }
 //    }
+
+    private String[] getText() {
+        String[] texts = new String[2];
+        texts[0] = mMemoEditText.getText().toString();
+        texts[1] = mTagEditText.getText().toString();
+        return texts;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,9 +136,8 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
         }
         //EditTextの入力が確定したら保存
         if (!unfixed) {
-            final String memo = mMemoEditText.getText().toString();
-            final String tag = mTagEditText.getText().toString();
-            mMemo.saveMemo(memo, tag);
+            final String[] texts = getText();
+            mMemo.saveMemo(texts[0], texts[1]);
         }
     }
 }

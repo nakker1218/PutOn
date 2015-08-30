@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
  * Created by nakayamashohei on 15/08/29.
  */
 public class OverlayMemoView extends LinearLayout {
+    private final static String LOG_TAG = OverlayMemoView.class.getSimpleName();
 
     public OverlayMemoView(Context context) {
         super(context);
