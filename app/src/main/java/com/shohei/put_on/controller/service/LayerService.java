@@ -3,9 +3,13 @@ package com.shohei.put_on.controller.service;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.IBinder;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -34,6 +38,8 @@ public class LayerService extends Service {
     private Button mSaveButton;
     private Button mCloseButton;
 
+    int mDisplayHeight;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -48,7 +54,53 @@ public class LayerService extends Service {
     public void appearOverlayView() {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        // 画面サイズの取得
+        Display display = mWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        mDisplayHeight = size.y;
+
         mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        try {
+            mOverlayMemoView.setOnTouchListener(new View.OnTouchListener() {
+                private int initialX;
+                private int initialY;
+                private float initialTouchX;
+                private float initialTouchY;
+
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            initialX = mLayoutParams.x;
+                            initialY = mLayoutParams.y;
+                            initialTouchX = event.getRawX();
+                            initialTouchY = event.getRawY();
+                            break;
+                        }
+                        case MotionEvent.ACTION_MOVE: {
+                            final int x = initialX + (int) (event.getRawX() - initialTouchX);
+                            final int y = mDisplayHeight - (initialY + (int) (event.getRawY() - initialTouchY) + (mOverlayMemoView.getHeight() / 2));
+                            mLayoutParams.x = x;
+                            mLayoutParams.y = y;
+                            Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
+                            Log.d(LOG_TAG, "initialX:" + initialX + " initialY:" + initialY);
+                            Log.d(LOG_TAG, "getRawX:" + event.getRawX() + " getRawY:" + event.getRawY());
+                            Log.d(LOG_TAG, "initialTouchX:" + initialTouchX + " initialTouchY:" + initialTouchY);
+                            mWindowManager.updateViewLayout(view, mLayoutParams);
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            break;
+                        }
+                    }
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);

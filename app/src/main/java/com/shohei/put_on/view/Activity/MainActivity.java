@@ -60,12 +60,12 @@ public class MainActivity extends ActionBarActivity {
         floatingActionButton.attachToListView(mMemoListView);
 
         //------------------------------------------------------------------------//
-        List<Memo> hoge = mMemoAdapter.getAllByTag("ほげ");
-        for (Memo piyo : hoge) {
-            Log.d(LOG_TAG, piyo.getId() + "," + piyo.memo  + "," + piyo.tag);
-        }
-        mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, hoge);
-        mMemoListView.setAdapter(mMemoAdapter);
+//        List<Memo> hoge = mMemoAdapter.getAllByTag("ほげ");
+//        for (Memo piyo : hoge) {
+//            Log.d(LOG_TAG, piyo.getId() + "," + piyo.memo  + "," + piyo.tag);
+//        }
+//        mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, hoge);
+//        mMemoListView.setAdapter(mMemoAdapter);
         //------------------------------------------------------------------------//
 
         mMemo = new Memo();
