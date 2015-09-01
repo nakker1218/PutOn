@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.shohei.put_on.controller.utils.DebugUtil;
@@ -13,18 +13,18 @@ import com.shohei.put_on.controller.utils.DebugUtil;
 /**
  * Created by nakayamashohei on 15/08/29.
  */
-public class OverlayMemoView extends LinearLayout {
-    private final static String LOG_TAG = OverlayMemoView.class.getSimpleName();
+public class OverlayMemoCreateView extends FrameLayout {
+    private final static String LOG_TAG = OverlayMemoCreateView.class.getSimpleName();
 
-    public OverlayMemoView(Context context) {
+    public OverlayMemoCreateView(Context context) {
         super(context);
     }
 
-    public OverlayMemoView(Context context, AttributeSet attrs) {
+    public OverlayMemoCreateView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public OverlayMemoView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OverlayMemoCreateView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -50,7 +50,6 @@ public class OverlayMemoView extends LinearLayout {
             return false;
         }
         return true;
-
     }
 
     @Override

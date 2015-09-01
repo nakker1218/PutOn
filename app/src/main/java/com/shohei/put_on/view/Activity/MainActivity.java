@@ -3,7 +3,6 @@ package com.shohei.put_on.view.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,7 +33,6 @@ public class MainActivity extends ActionBarActivity {
 
     private ListView mMemoListView;
     private Toolbar mMainToolbar;
-    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,16 +110,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-//        setMemoListView();
+        setMemoListView();
     }
 
     //FloatingActionButtonが押された時の処理
     public void addMemo(View v) {
-//        Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
-//        startActivity(intent);
-
         if (!mServiceRunningDetector.isServiceRunning()) {
-            if (DebugUtil.DEBUG) Log.d(LOG_TAG, mServiceRunningDetector.isServiceRunning() + "");
+            if (DebugUtil.DEBUG) Log.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
             finish();
         }

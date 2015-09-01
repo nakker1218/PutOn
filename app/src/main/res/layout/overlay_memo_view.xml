@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.shohei.put_on.view.widget.OverlayMemoCreateView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:paddingLeft="28dp"
     android:paddingRight="28dp">
 
     <FrameLayout
+        android:id="@+id/memoCreate_FrameLayout_Overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background_frame_border">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/save_Button_Overlay"
@@ -17,7 +18,8 @@
             android:layout_height="40dp"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
-            android:background="@drawable/overlay_background_shape" />
+            android:background="@drawable/overlay_background_shape"
+            android:onClick="saveOverlay" />
 
         <Button
             android:id="@+id/close_Button_Overlay"
@@ -26,7 +28,18 @@
             android:layout_gravity="top|right"
             android:layout_marginTop="14dp"
             android:layout_marginRight="12dp"
-            android:background="@mipmap/ic_cross" />
+            android:background="@mipmap/ic_cross"
+            android:onClick="closeOverlay" />
+
+        <Button
+            android:id="@+id/minimize_Button_Overlay"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="46dp"
+            android:background="@mipmap/ic_hyphen"
+            android:onClick="minimizeOverlay" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,11 +52,6 @@
                 android:layout_height="5dp"
                 android:background="@color/primary_overlayView" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@android:color/white" />
-
             <EditText
                 android:id="@+id/memo_EditText_Overlay"
                 android:layout_width="match_parent"
@@ -52,14 +60,9 @@
                 android:textSize="20sp"
                 android:padding="16dp"
                 android:background="@color/background_memo_editText"
-                android:textColor="@color/memo_editText_text"
+                android:textColor="@color/hint_memo_editText"
                 android:hint="@string/hint_memo_editText"
-                android:textColorHint="@color/memo_editText_text" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@android:color/white" />
+                android:textColorHint="@color/hint_memo_editText" />
 
             <EditText
                 android:id="@+id/tag_EditText_Overlay"
@@ -70,10 +73,22 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:textSize="14sp"
-                android:background="@color/background_title_editText"
+                android:background="@color/primary_overlayView"
                 android:textColor="@android:color/white"
                 android:hint="@string/hint_tag_editText"
-                android:textColorHint="@android:color/white" />
+                android:textColorHint="@color/hint_tag_editText" />
         </LinearLayout>
+
     </FrameLayout>
-</com.shohei.put_on.view.widget.OverlayMemoView>
+
+    <View
+        tools:visibility="visible"
+        android:id="@+id/floating_Button_Overlay"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:background="@mipmap/ic_launcher"
+        android:elevation="8dp"
+        android:visibility="gone" />
+</com.shohei.put_on.view.widget.OverlayMemoCreateView>
+

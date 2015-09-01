@@ -31,7 +31,7 @@
         </activity>
         <activity
             android:name=".view.Activity.MemoDetailActivity"
-            android:label="@string/title_activity_memo_create"
+            android:label="@string/title_activity_memo_detail"
             android:parentActivityName=".view.Activity.MainActivity">
         </activity>
         <service android:name=".controller.service.LayerService"></service>

@@ -15,9 +15,9 @@
     <color name="accent_red_dark">#C2185B</color>
     <color name="list_pressed">#6666</color>
 
-    <color name="primary_overlayView">#5F000000</color>
+    <color name="primary_overlayView">#96000000</color>
     <color name="primary_dark_overlayView">#78000000</color>
-    <color name="background_memo_editText">#3Cffffff</color>
-    <color name="background_title_editText">#5F000000</color>
-    <color name="memo_editText_text">#ff4b4b4b</color>
+    <color name="background_memo_editText">#96ffffff</color>
+    <color name="hint_memo_editText">#c84b4b4b</color>
+    <color name="hint_tag_editText">#c8ffffff</color>
 </resources>

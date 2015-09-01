@@ -12,14 +12,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.DebugUtil;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.widget.OverlayMemoView;
+import com.shohei.put_on.view.widget.OverlayMemoCreateView;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -28,22 +28,25 @@ public class LayerService extends Service implements View.OnTouchListener {
     private final static String LOG_TAG = LayerService.class.getSimpleName();
 
     private Memo mMemo;
-    private OverlayMemoView mOverlayMemoView;
+    private OverlayMemoCreateView mOverlayMemoCreateView;
     private ServiceRunningDetector mServiceRunningDetector;
 
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mLayoutParams;
 
+    private FrameLayout mMemoFrameLayout;
     private EditText mTagEditText;
     private EditText mMemoEditText;
-    private Button mSaveButton;
-    private Button mCloseButton;
+    private View mFloatingButton;
 
-    private int initialX;
-    private int initialY;
-    private float initialTouchX;
-    private float initialTouchY;
+    private float mInitialTouchX;
+    private float mInitialTouchY;
+    private int mPositionX;
+    private int mPositionY;
     private int mDisplayHeight;
+
+    private boolean mIsOpen = true;
+    private boolean mIsClickable = true;
 
     @Override
     public void onCreate() {
@@ -53,45 +56,22 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     @Override
     public void onDestroy() {
-        mWindowManager.removeView(mOverlayMemoView);
+        mWindowManager.removeView(mOverlayMemoCreateView);
     }
 
     public void appearOverlayView() {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        Display display = mWindowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        mDisplayHeight = size.y;
-
-        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        mOverlayMemoView.setOnTouchListener(this);
+        mOverlayMemoCreateView = (OverlayMemoCreateView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        mOverlayMemoCreateView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
 
         findViews();
 
-        //Buttonのクリックリスナー
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String memo = mMemoEditText.getText().toString();
-                final String tag = mTagEditText.getText().toString();
-
-                mMemo.saveMemo(memo, tag);
-            }
-        });
-
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mServiceRunningDetector.isServiceRunning()) {
-                    stopSelf();
-                }
-            }
-        });
+        mDisplayHeight = getDisplaySize().y;
 
         //Layoutを設定
         mLayoutParams = new WindowManager.LayoutParams(
@@ -102,16 +82,60 @@ public class LayerService extends Service implements View.OnTouchListener {
                 PixelFormat.TRANSLUCENT);
 
         mLayoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
-        mWindowManager.addView(mOverlayMemoView, mLayoutParams);
-
+        mWindowManager.addView(mOverlayMemoCreateView, mLayoutParams);
     }
 
     //関連づけ
     private void findViews() {
-        mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
-        mSaveButton = (Button) mOverlayMemoView.findViewById(R.id.save_Button_Overlay);
-        mCloseButton = (Button) mOverlayMemoView.findViewById(R.id.close_Button_Overlay);
+        mMemoFrameLayout = (FrameLayout) mOverlayMemoCreateView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
+        mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
+        mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
+        mFloatingButton = mOverlayMemoCreateView.findViewById(R.id.floating_Button_Overlay);
+    }
+
+    // Saveボタン
+    public void saveOverlay(View v) {
+        final String memo = mMemoEditText.getText().toString();
+        final String tag = mTagEditText.getText().toString();
+
+        mMemo.saveMemo(memo, tag);
+    }
+
+    // Closeボタン
+    public void closeOverlay(View v) {
+        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Close");
+        if (mServiceRunningDetector.isServiceRunning()) {
+            stopSelf();
+        }
+    }
+
+    // Minimizeボタン
+    public void minimizeOverlay(View v) {
+        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Minimize");
+        mIsOpen = false;
+        mMemoFrameLayout.setVisibility(View.GONE);
+        mFloatingButton.setVisibility(View.VISIBLE);
+
+        updateLayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                mOverlayMemoCreateView
+        );
+    }
+
+    // 画面サイズの取得
+    private Point getDisplaySize() {
+        Display display = mWindowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
+    }
+
+    private void updateLayoutParams(int widthParam, int flagParam, View view) {
+        mLayoutParams.width = widthParam;
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.flags = flagParam;
+        mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
     @Override
@@ -121,30 +145,50 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                initialX = mLayoutParams.x;
-                initialY = mLayoutParams.y;
-                initialTouchX = event.getRawX();
-                initialTouchY = event.getRawY();
+                mInitialTouchX = event.getRawX();
+                mInitialTouchY = event.getRawY();
+                mPositionX = (int) mInitialTouchX;
+                mPositionY = (int) mInitialTouchY;
+
+                if (!mIsOpen) mIsClickable = true;
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
-                final int x = initialX + (int) (event.getRawX() - initialTouchX);
-                final int y = mDisplayHeight - (initialY + (int) (event.getRawY() - initialTouchY) + (mOverlayMemoView.getHeight() / 2));
-                mLayoutParams.x = x;
-                mLayoutParams.y = y;
+                if (mIsOpen) {
+                    final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoCreateView.getHeight() / 2);
+                    mLayoutParams.y = y;
+                } else {
+                    final int x = mPositionX - (int) event.getRawX();
+                    final int y = mPositionY - (int) event.getRawY();
+                    mLayoutParams.x -= x;
+                    mLayoutParams.y += y;
+                    mPositionX = (int) event.getRawX();
+                    mPositionY = (int) event.getRawY();
+                    mIsClickable = false;
+                }
                 if (DebugUtil.DEBUG)
                     Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
-                mWindowManager.updateViewLayout(v, mLayoutParams);
+                mWindowManager.updateViewLayout(view, mLayoutParams);
                 break;
             }
             case MotionEvent.ACTION_UP: {
+                if (!mIsOpen && mIsClickable) {
+                    mIsOpen = true;
+                    mMemoFrameLayout.setVisibility(View.VISIBLE);
+                    mFloatingButton.setVisibility(View.GONE);
+
+                    updateLayoutParams(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                            view
+                    );
+                }
                 break;
             }
         }
         return false;
     }
 }
-

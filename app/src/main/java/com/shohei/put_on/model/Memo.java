@@ -8,7 +8,6 @@ import com.activeandroid.annotation.Table;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -29,9 +28,6 @@ public class Memo extends Model {
     @Column(name = "date")
     public String date;
 
-    @Column(name = "address")
-    public String address;
-
     @Override
     public String toString() {
         return tag;
@@ -46,14 +42,12 @@ public class Memo extends Model {
         }
     }
 
-
     public void saveMemo(String memo, String tag) {
         if (TextUtils.isEmpty(memo)) return;
         this.tag = TextUtils.isEmpty(tag) ? "" : tag;
         this.memo = memo;
         Date date = new Date(System.currentTimeMillis());
         this.date = Memo.DATE_FORMAT.format(date);
-
         this.save();
     }
 
@@ -65,14 +59,4 @@ public class Memo extends Model {
         }
 
     }
-
-//    public String buildTextTag(ArrayList<String> tag){
-//        StringBuilder builder = new StringBuilder();
-//        for (String string : tag){
-////        for (int i = 0; i < tag.size(); i++){
-////            String string = tag.get(i);
-//            builder.append(string).append(" ");
-//        }
-//        return builder.toString();
-//    }
 }

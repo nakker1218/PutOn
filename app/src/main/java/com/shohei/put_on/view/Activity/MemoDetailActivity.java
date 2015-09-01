@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
@@ -34,7 +33,7 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.memoDetail_Toolbar);
         toolbar.setTitle(R.string.title_toolbar_detail);
-        toolbar.setNavigationIcon(R.mipmap.ic_done);
+        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
