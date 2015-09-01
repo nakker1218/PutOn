@@ -34,18 +34,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:textSize="24sp"
+            android:textSize="@dimen/text_size_xxlarge"
             android:layout_gravity="center" />
 
         <view
             class="com.melnykov.fab.FloatingActionButton"
-            android:id="@+id/create_FloatingButton"
+            android:id="@+id/create_FAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
+            android:layout_margin="@dimen/element_spacing_xlarge"
             android:src="@mipmap/ic_add"
-            android:onClick="addMemo"
+            android:onClick="createMemo"
             fab:fab_colorNormal="@color/primary"
             fab:fab_colorPressed="@color/primary_dark" />
     </FrameLayout>

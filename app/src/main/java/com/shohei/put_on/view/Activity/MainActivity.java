@@ -2,7 +2,7 @@ package com.shohei.put_on.view.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private Memo mMemo;
@@ -34,6 +34,8 @@ public class MainActivity extends ActionBarActivity {
     private ListView mMemoListView;
     private Toolbar mMainToolbar;
 
+    private int mSelectedMemoCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,21 +43,14 @@ public class MainActivity extends ActionBarActivity {
 
         mMainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
         setSupportActionBar(mMainToolbar);
-        getSupportActionBar().setElevation(8);
-        mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-        //アイコンをタップでListViewの一番上に
-        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMemoListView.setSelection(0);
-            }
-        });
+        getSupportActionBar().setElevation(1);
+        setNormalToolBar();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.create_FloatingButton);
-        floatingActionButton.attachToListView(mMemoListView);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.create_FAB);
+        fab.attachToListView(mMemoListView);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -84,39 +79,65 @@ public class MainActivity extends ActionBarActivity {
 
                 mMemo = mMemoAdapter.getItem(position);
                 mMemoAdapter.changeSelect(mMemo);
-                setToolbar();
+                changeToolBar();
                 return true;
             }
         });
     }
 
     //Toolbarの色とアイコンの変更
-    private void setToolbar() {
-        int count = mMemoAdapter.getSelectCount();
-        mMainToolbar.setBackgroundColor(
-                getResources()
-                        .getColor(
-                                count > 0 ? R.color.accent_red : R.color.primary
-                        ));
+    private void changeToolBar() {
+        mSelectedMemoCount = mMemoAdapter.getSelectCount();
         Menu menu = mMainToolbar.getMenu();
         MenuItem menuDelete = menu.getItem(0);
-        if (count > 0) {
+        if (mSelectedMemoCount > 0) {
             menuDelete.setVisible(true);
+            setSelectToolBar(menuDelete);
         } else {
             menuDelete.setVisible(false);
+            setNormalToolBar();
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setMemoListView();
+    private void setNormalToolBar() {
+        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.primary));
+        mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+        mMainToolbar.setTitle(R.string.app_name);
+        //アイコンをタップでListViewの一番上に
+        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMemoListView.setSelection(0);
+            }
+        });
     }
 
-    //FloatingActionButtonが押された時の処理
-    public void addMemo(View v) {
+    private void setSelectToolBar(final MenuItem menuItem) {
+        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.accent_red));
+        mMainToolbar.setTitle(String.valueOf(mSelectedMemoCount));
+        mMainToolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSelectedMemoCount = 0;
+                mMemoAdapter.changeSelect(mMemo);
+                menuItem.setVisible(false);
+                setNormalToolBar();
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setMemoListView();
+        setNormalToolBar();
+    }
+
+    public void createMemo(View v) {
         if (!mServiceRunningDetector.isServiceRunning()) {
-            if (DebugUtil.DEBUG) Log.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
+            if (DebugUtil.DEBUG)
+                Log.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
             finish();
         }
@@ -138,7 +159,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (id == R.id.delete_menu) {
             mMemoAdapter.deleteAll();
-            setToolbar();
+            changeToolBar();
         }
         return super.onOptionsItemSelected(item);
     }

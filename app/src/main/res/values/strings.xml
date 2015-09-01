@@ -2,13 +2,13 @@
     <string name="app_name">PutOn</string>
     <string name="title_activity_memo_detail">MemoCreateActivity</string>
 
-    <string name="text_listView_empty">No items found</string>
+    <string name="text_listView_empty">Item Not Found</string>
 
     <string name="title_toolbar_detail">Edit Memo</string>
 
     <string name="hint_memo_editText">Memo</string>
     <string name="hint_tag_editText">Tag</string>
 
-    <string name="title_menu_main_delete">削除</string>
-    <string name="title_menu_main_search">検索</string>
+    <string name="title_menu_main_delete">Delete</string>
+    <string name="title_menu_main_search">Search</string>
 </resources>

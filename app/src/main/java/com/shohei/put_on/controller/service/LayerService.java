@@ -37,7 +37,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     private FrameLayout mMemoFrameLayout;
     private EditText mTagEditText;
     private EditText mMemoEditText;
-    private View mFloatingButton;
+    private View mFab;
 
     private float mInitialTouchX;
     private float mInitialTouchY;
@@ -85,15 +85,13 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoCreateView, mLayoutParams);
     }
 
-    //関連づけ
     private void findViews() {
         mMemoFrameLayout = (FrameLayout) mOverlayMemoCreateView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
         mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
         mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
-        mFloatingButton = mOverlayMemoCreateView.findViewById(R.id.floating_Button_Overlay);
+        mFab = mOverlayMemoCreateView.findViewById(R.id.overlay_FAB);
     }
 
-    // Saveボタン
     public void saveOverlay(View v) {
         final String memo = mMemoEditText.getText().toString();
         final String tag = mTagEditText.getText().toString();
@@ -101,7 +99,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         mMemo.saveMemo(memo, tag);
     }
 
-    // Closeボタン
     public void closeOverlay(View v) {
         if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Close");
         if (mServiceRunningDetector.isServiceRunning()) {
@@ -109,12 +106,11 @@ public class LayerService extends Service implements View.OnTouchListener {
         }
     }
 
-    // Minimizeボタン
     public void minimizeOverlay(View v) {
         if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Minimize");
         mIsOpen = false;
         mMemoFrameLayout.setVisibility(View.GONE);
-        mFloatingButton.setVisibility(View.VISIBLE);
+        mFab.setVisibility(View.VISIBLE);
 
         updateLayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -123,7 +119,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         );
     }
 
-    // 画面サイズの取得
     private Point getDisplaySize() {
         Display display = mWindowManager.getDefaultDisplay();
         Point size = new Point();
@@ -131,6 +126,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         return size;
     }
 
+    // Layoutのパラメータの設定
     private void updateLayoutParams(int widthParam, int flagParam, View view) {
         mLayoutParams.width = widthParam;
         mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -146,6 +142,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+        // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 mInitialTouchX = event.getRawX();
@@ -178,7 +175,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                 if (!mIsOpen && mIsClickable) {
                     mIsOpen = true;
                     mMemoFrameLayout.setVisibility(View.VISIBLE);
-                    mFloatingButton.setVisibility(View.GONE);
+                    mFab.setVisibility(View.GONE);
 
                     updateLayoutParams(
                             WindowManager.LayoutParams.MATCH_PARENT,

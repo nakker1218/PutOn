@@ -1,45 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shohei.put_on.view.widget.OverlayMemoCreateView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.shohei.put_on.view.widget.OverlayMemoCreateView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="28dp"
-    android:paddingRight="28dp">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/memoCreate_FrameLayout_Overlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
         android:visibility="visible">
-
-        <Button
-            android:id="@+id/save_Button_Overlay"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:background="@drawable/overlay_background_shape"
-            android:onClick="saveOverlay" />
-
-        <Button
-            android:id="@+id/close_Button_Overlay"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="top|right"
-            android:layout_marginTop="14dp"
-            android:layout_marginRight="12dp"
-            android:background="@mipmap/ic_cross"
-            android:onClick="closeOverlay" />
-
-        <Button
-            android:id="@+id/minimize_Button_Overlay"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="top|right"
-            android:layout_marginTop="14dp"
-            android:layout_marginRight="46dp"
-            android:background="@mipmap/ic_hyphen"
-            android:onClick="minimizeOverlay" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,16 +51,46 @@
                 android:textColorHint="@color/hint_tag_editText" />
         </LinearLayout>
 
+        <View
+            class="com.melnykov.fab.FloatingActionButton"
+            android:id="@+id/save_FAB_Overlay"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:background="@drawable/overlay_background_shape"
+            android:onClick="saveOverlay" />
+
+        <Button
+            android:id="@+id/close_Button_Overlay"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="12dp"
+            android:background="@mipmap/ic_cross"
+            android:onClick="closeOverlay" />
+
+        <Button
+            android:id="@+id/minimize_Button_Overlay"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top|right"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="46dp"
+            android:background="@mipmap/ic_hyphen"
+            android:onClick="minimizeOverlay" />
+
     </FrameLayout>
 
     <View
         tools:visibility="visible"
-        android:id="@+id/floating_Button_Overlay"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        class="com.melnykov.fab.FloatingActionButton"
+        android:id="@+id/overlay_FAB"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center"
         android:background="@mipmap/ic_launcher"
-        android:elevation="8dp"
         android:visibility="gone" />
 </com.shohei.put_on.view.widget.OverlayMemoCreateView>
 

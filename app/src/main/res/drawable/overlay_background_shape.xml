@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <ripple android:color="@color/accent_red_dark">
-            <item>
-                <shape android:shape="oval">
-                    <solid android:color="@android:color/white" />
-                    <stroke
-                        android:width="3dp"
-                        android:color="@color/accent_red" />
-                </shape>
-            </item>
-            <item
-                android:drawable="@mipmap/ic_check"
-                android:left="8dp"
-                android:right="8dp"
-                android:top="8dp"
-                android:bottom="8dp"/>
-        </ripple>
+        <shape android:shape="oval">
+            <solid
+                android:color="@android:color/white" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/accent_red" />
+        </shape>
     </item>
+
+    <item
+        android:drawable="@mipmap/ic_check"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp"
+        android:bottom="8dp" />
 </layer-list>

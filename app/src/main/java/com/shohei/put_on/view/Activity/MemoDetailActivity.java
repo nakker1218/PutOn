@@ -2,7 +2,7 @@ package com.shohei.put_on.view.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,7 +16,7 @@ import com.shohei.put_on.model.Memo;
 
 import java.util.List;
 
-public class MemoDetailActivity extends ActionBarActivity implements TextWatcher {
+public class MemoDetailActivity extends AppCompatActivity implements TextWatcher {
     private final static String LOG_TAG = MemoDetailActivity.class.getSimpleName();
 
     private Memo mMemo;
@@ -33,6 +33,8 @@ public class MemoDetailActivity extends ActionBarActivity implements TextWatcher
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.memoDetail_Toolbar);
         toolbar.setTitle(R.string.title_toolbar_detail);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(1);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
