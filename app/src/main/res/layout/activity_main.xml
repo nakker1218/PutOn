@@ -20,13 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ListView
             android:id="@+id/memo_ListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadingEdge="none"
-            android:dividerHeight="1dp" />
+            android:dividerHeight="@dimen/divider_size" />
 
         <TextView
             android:id="@+id/listEmpty_TextView"
@@ -40,8 +39,8 @@
         <view
             class="com.melnykov.fab.FloatingActionButton"
             android:id="@+id/create_FAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/fab_size_normal"
+            android:layout_height="@dimen/fab_size_normal"
             android:layout_gravity="bottom|right"
             android:layout_margin="@dimen/element_spacing_xlarge"
             android:src="@mipmap/ic_add"

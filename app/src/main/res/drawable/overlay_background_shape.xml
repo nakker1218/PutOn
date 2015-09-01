@@ -5,15 +5,15 @@
             <solid
                 android:color="@android:color/white" />
             <stroke
-                android:width="3dp"
+                android:width="@dimen/stroke_size"
                 android:color="@color/accent_red" />
         </shape>
     </item>
 
     <item
         android:drawable="@mipmap/ic_check"
-        android:left="8dp"
-        android:right="8dp"
-        android:top="8dp"
-        android:bottom="8dp" />
+        android:left="@dimen/horizontal_margin_normal"
+        android:right="@dimen/horizontal_margin_normal"
+        android:top="@dimen/vertical_margin_normal"
+        android:bottom="@dimen/vertical_margin_normal" />
 </layer-list>
