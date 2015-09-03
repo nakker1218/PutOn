@@ -5,5 +5,5 @@ package com.shohei.put_on.controller.utils;
  */
 public class DebugUtil {
     //Debug常態かどうかのフラグ
-    public final static boolean DEBUG = false;
+    public final static boolean DEBUG = true;
 }

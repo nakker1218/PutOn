@@ -12,8 +12,8 @@
 
     <item
         android:drawable="@mipmap/ic_check"
-        android:left="@dimen/horizontal_margin_normal"
-        android:right="@dimen/horizontal_margin_normal"
-        android:top="@dimen/vertical_margin_normal"
-        android:bottom="@dimen/vertical_margin_normal" />
+        android:left="@dimen/horizontal_margin_small"
+        android:right="@dimen/horizontal_margin_small"
+        android:top="@dimen/vertical_margin_small"
+        android:bottom="@dimen/vertical_margin_small" />
 </layer-list>

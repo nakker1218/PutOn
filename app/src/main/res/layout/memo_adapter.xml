@@ -45,7 +45,7 @@
             android:textSize="@dimen/text_size_medium"
             android:textColor="@color/tag_text"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:singleLine="true"
             android:scrollHorizontally="true"/>
 
     </LinearLayout>

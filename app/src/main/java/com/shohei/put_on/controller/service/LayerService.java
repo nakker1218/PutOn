@@ -46,7 +46,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     private int mDisplayHeight;
 
     private boolean mIsOpen = true;
-    private boolean mIsClickable = true;
+    private boolean mIsClicked = true;
 
     @Override
     public void onCreate() {
@@ -150,7 +150,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                 mPositionX = (int) mInitialTouchX;
                 mPositionY = (int) mInitialTouchY;
 
-                if (!mIsOpen) mIsClickable = true;
+                if (!mIsOpen) mIsClicked = true;
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
@@ -164,7 +164,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                     mLayoutParams.y += y;
                     mPositionX = (int) event.getRawX();
                     mPositionY = (int) event.getRawY();
-                    mIsClickable = false;
+                    mIsClicked = false;
                 }
                 if (DebugUtil.DEBUG)
                     Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
@@ -172,7 +172,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                 break;
             }
             case MotionEvent.ACTION_UP: {
-                if (!mIsOpen && mIsClickable) {
+                if (!mIsOpen && mIsClicked) {
                     mIsOpen = true;
                     mMemoFrameLayout.setVisibility(View.VISIBLE);
                     mFab.setVisibility(View.GONE);

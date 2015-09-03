@@ -1,2 +1,2 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.shohei.put_on.view.Activity.MemoDetailActivity"></menu>
+    tools:context="com.shohei.put_on.view.activity.MemoDetailActivity"></menu>
