@@ -11,4 +11,13 @@
         app:showAsAction="ifRoom"
         android:visible="false" />
 
+    <item
+        app:actionViewClass="android.widget.SearchView"
+        android:id="@+id/search_menu"
+        android:icon="@mipmap/ic_search"
+        android:title="@string/title_menu_main_search"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:visible="true" />
+
 </menu>

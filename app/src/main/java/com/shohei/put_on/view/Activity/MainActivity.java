@@ -1,6 +1,8 @@
 package com.shohei.put_on.view.activity;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SearchView mSearchView;
 
     private int mSelectedMemoCount = 0;
+    private int mCurrentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
         setSupportActionBar(mMainToolbar);
         getSupportActionBar().setElevation(1);
+
+        mCurrentColor = getResources().getColor(R.color.primary);
         changeToolBarColorNormal();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
@@ -100,8 +105,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void changeToolBarColorNormal() {
-        setToolbar(getResources().getColor(R.color.primary),
-                getResources().getString(R.string.app_name),
+        setToolbar(getResources().getString(R.string.app_name),
                 R.mipmap.ic_launcher,
                 new View.OnClickListener() {
                     @Override
@@ -110,11 +114,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
                 }
         );
+        changeViewColor(mMainToolbar,
+                mCurrentColor,
+                mCurrentColor = getResources().getColor(R.color.primary));
+
     }
 
     private void changeToolBarColorSelect() {
-        setToolbar(getResources().getColor(R.color.accent_red),
-                String.valueOf(mSelectedMemoCount),
+        setToolbar(String.valueOf(mSelectedMemoCount),
                 R.mipmap.ic_arrow_back,
                 new View.OnClickListener() {
                     @Override
@@ -126,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
                 }
         );
+        changeViewColor(mMainToolbar,
+                mCurrentColor,
+                mCurrentColor = getResources().getColor(R.color.accent_red));
     }
 
     private void setToolbarIcon(boolean isSelect) {
@@ -136,11 +146,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         menuSearch.setVisible(!isSelect);
     }
 
-    private void setToolbar(int color, String title, int iconId, View.OnClickListener listener) {
-        mMainToolbar.setBackgroundColor(color);
+    private void setToolbar(String title, int iconId, View.OnClickListener listener) {
         mMainToolbar.setTitle(title);
         mMainToolbar.setNavigationIcon(iconId);
         mMainToolbar.setNavigationOnClickListener(listener);
+    }
+
+    private void changeViewColor(final View view, final int initialColor, final int finalColor) {
+        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float position = animation.getAnimatedFraction();
+                int blended = blendColors(initialColor, finalColor, position);
+
+                view.setBackgroundColor(blended);
+            }
+        });
+        anim.setDuration(250).start();
+    }
+
+    private int blendColors(int from, int to, float ratio) {
+        final float inverseRatio = 1f - ratio;
+
+        final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
+        final float g = Color.green(to) * ratio + Color.green(from) * inverseRatio;
+        final float b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio;
+
+        return Color.rgb((int) r, (int) g, (int) b);
     }
 
     @Override
@@ -177,23 +210,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (id) {
-            case R.id.delete_menu: {
-                mMemoAdapter.deleteAll();
-                changeToolBar();
-                break;
-            }
-            case R.id.search_menu: {
-
-                break;
-            }
+        if (id == R.id.delete_menu) {
+            mMemoAdapter.deleteAll();
+            changeToolBar();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
         Logger.d(LOG_TAG, "onQueryTextSubmit" + query);
         return true;
     }
