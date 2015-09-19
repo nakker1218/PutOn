@@ -1,38 +1,39 @@
-package com.shohei.put_on.view.Activity;
+package com.shohei.put_on.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.activeandroid.query.Select;
 import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.service.LayerService;
-import com.shohei.put_on.controller.utils.DebugUtil;
+import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.Adapter.MemoAdapter;
+import com.shohei.put_on.view.adapter.MemoAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     private Memo mMemo;
     private MemoAdapter mMemoAdapter;
     private ServiceRunningDetector mServiceRunningDetector;
 
-    private ListView mMemoListView;
     private Toolbar mMainToolbar;
+    private ListView mMemoListView;
+    private SearchView mSearchView;
 
     private int mSelectedMemoCount = 0;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         mMainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
         setSupportActionBar(mMainToolbar);
         getSupportActionBar().setElevation(1);
-        setNormalToolBar();
+        changeToolBarColorNormal();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mServiceRunningDetector = new ServiceRunningDetector(this);
 
         setMemoListView();
+
     }
 
     private void setMemoListView() {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
+                Logger.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
 
                 mMemo = mMemoAdapter.getItem(position);
                 mMemoAdapter.changeSelect(mMemo);
@@ -88,56 +90,70 @@ public class MainActivity extends AppCompatActivity {
     //Toolbarの色とアイコンの変更
     private void changeToolBar() {
         mSelectedMemoCount = mMemoAdapter.getSelectCount();
-        Menu menu = mMainToolbar.getMenu();
-        MenuItem menuDelete = menu.getItem(0);
         if (mSelectedMemoCount > 0) {
-            menuDelete.setVisible(true);
-            setSelectToolBar(menuDelete);
+            setToolbarIcon(true);
+            changeToolBarColorSelect();
         } else {
-            menuDelete.setVisible(false);
-            setNormalToolBar();
+            setToolbarIcon(false);
+            changeToolBarColorNormal();
         }
     }
 
-    private void setNormalToolBar() {
-        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.primary));
-        mMainToolbar.setNavigationIcon(R.mipmap.ic_launcher);
-        mMainToolbar.setTitle(R.string.app_name);
-        //アイコンをタップでListViewの一番上に
-        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMemoListView.setSelection(0);
-            }
-        });
+    private void changeToolBarColorNormal() {
+        setToolbar(getResources().getColor(R.color.primary),
+                getResources().getString(R.string.app_name),
+                R.mipmap.ic_launcher,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMemoListView.setSelection(0);
+                    }
+                }
+        );
     }
 
-    private void setSelectToolBar(final MenuItem menuItem) {
-        mMainToolbar.setBackgroundColor(getResources().getColor(R.color.accent_red));
-        mMainToolbar.setTitle(String.valueOf(mSelectedMemoCount));
-        mMainToolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
-        mMainToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSelectedMemoCount = 0;
-                mMemoAdapter.changeSelect(mMemo);
-                menuItem.setVisible(false);
-                setNormalToolBar();
-            }
-        });
+    private void changeToolBarColorSelect() {
+        setToolbar(getResources().getColor(R.color.accent_red),
+                String.valueOf(mSelectedMemoCount),
+                R.mipmap.ic_arrow_back,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSelectedMemoCount = 0;
+                        mMemoAdapter.changeSelect(mMemo);
+                        setToolbarIcon(false);
+                        changeToolBarColorNormal();
+                    }
+                }
+        );
+    }
+
+    private void setToolbarIcon(boolean isSelect) {
+        Menu menu = mMainToolbar.getMenu();
+        MenuItem menuDelete = menu.getItem(0);
+        MenuItem menuSearch = menu.getItem(1);
+        menuDelete.setVisible(isSelect);
+        menuSearch.setVisible(!isSelect);
+    }
+
+    private void setToolbar(int color, String title, int iconId, View.OnClickListener listener) {
+        mMainToolbar.setBackgroundColor(color);
+        mMainToolbar.setTitle(title);
+        mMainToolbar.setNavigationIcon(iconId);
+        mMainToolbar.setNavigationOnClickListener(listener);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         setMemoListView();
-        setNormalToolBar();
+        changeToolBarColorNormal();
     }
 
     public void createMemo(View v) {
         if (!mServiceRunningDetector.isServiceRunning()) {
-            if (DebugUtil.DEBUG)
-                Log.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
+
+            Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
             finish();
         }
@@ -147,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        mSearchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -157,10 +177,31 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.delete_menu) {
-            mMemoAdapter.deleteAll();
-            changeToolBar();
+        switch (id) {
+            case R.id.delete_menu: {
+                mMemoAdapter.deleteAll();
+                changeToolBar();
+                break;
+            }
+            case R.id.search_menu: {
+
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        Logger.d(LOG_TAG, "onQueryTextSubmit" + query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Logger.d(LOG_TAG, "onQueryTextChange" + newText);
+        mMemoAdapter.getFilter().filter(newText);
+        return true;
     }
 }

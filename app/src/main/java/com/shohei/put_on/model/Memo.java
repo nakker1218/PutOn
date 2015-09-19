@@ -30,7 +30,7 @@ public class Memo extends Model {
 
     @Override
     public String toString() {
-        return tag;
+        return memo + tag;
     }
 
     public Date getUpdateTime() {
@@ -59,4 +59,5 @@ public class Memo extends Model {
         }
 
     }
+
 }

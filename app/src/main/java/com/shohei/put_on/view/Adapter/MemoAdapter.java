@@ -1,16 +1,16 @@
-package com.shohei.put_on.view.Adapter;
+package com.shohei.put_on.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.DebugUtil;
+import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.model.Memo;
 
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
     }
 
     public void changeSelect(Memo memo) {
-        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "containsKey: " + mSelectMap.containsKey(memo));
+        Logger.d(LOG_TAG, "containsKey: " + mSelectMap.containsKey(memo));
 
         if (mSelectMap.containsKey(memo)) {
             mSelectMap.put(memo, !mSelectMap.get(memo));
@@ -99,6 +99,13 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         }
         mSelectMap.clear();
         notifyDataSetChanged();
+    }
+
+    public static List<Memo> searchTag(String word) {
+        return new Select().from(Memo.class)
+                .where("tag LIKE ?", new Object[]{'%' + word + '%'})
+                .orderBy("tag ASC")
+                .execute();
     }
 
     private class ViewHolder {

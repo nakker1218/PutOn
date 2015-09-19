@@ -1,4 +1,4 @@
-package com.shohei.put_on.view.Activity;
+package com.shohei.put_on.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

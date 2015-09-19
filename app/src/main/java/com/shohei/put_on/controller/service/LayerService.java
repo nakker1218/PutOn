@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.DebugUtil;
+import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.widget.OverlayMemoCreateView;
@@ -100,14 +99,14 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     public void closeOverlay(View v) {
-        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Close");
+        Logger.d(LOG_TAG, "Close");
         if (mServiceRunningDetector.isServiceRunning()) {
             stopSelf();
         }
     }
 
     public void minimizeOverlay(View v) {
-        if (DebugUtil.DEBUG) Log.d(LOG_TAG, "Minimize");
+        Logger.d(LOG_TAG, "Minimize");
         mIsOpen = false;
         mMemoFrameLayout.setVisibility(View.GONE);
         mFab.setVisibility(View.VISIBLE);
@@ -166,8 +165,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                     mPositionY = (int) event.getRawY();
                     mIsClicked = false;
                 }
-                if (DebugUtil.DEBUG)
-                    Log.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
+                Logger.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
                 mWindowManager.updateViewLayout(view, mLayoutParams);
                 break;
             }
