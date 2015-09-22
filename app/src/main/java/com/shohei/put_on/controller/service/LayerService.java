@@ -11,12 +11,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
@@ -97,6 +97,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         final String tag = mTagEditText.getText().toString();
 
         mMemo.saveMemo(memo, tag);
+        if (!memo.isEmpty()) Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
     }
 
     public void closeOverlay(View v) {
