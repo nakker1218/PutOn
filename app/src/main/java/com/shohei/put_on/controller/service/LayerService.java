@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.Button;
@@ -100,7 +101,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     public void closeOverlay(View v) {
         Logger.d(LOG_TAG, "Close");
-        mCloseButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.overlay_button_size_overlay)));
+
         if (mServiceRunningDetector.isServiceRunning()) {
             stopSelf();
         }
@@ -108,7 +109,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     public void minimizeOverlay(View v) {
         Logger.d(LOG_TAG, "Minimize");
-        mMinimizeButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.overlay_button_size_overlay)));
+
         mIsOpen = false;
         mMemoFrameLayout.setVisibility(View.GONE);
         mFab.setVisibility(View.VISIBLE);
