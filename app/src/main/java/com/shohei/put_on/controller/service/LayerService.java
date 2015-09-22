@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
@@ -36,6 +39,9 @@ public class LayerService extends Service implements View.OnTouchListener {
     private FrameLayout mMemoFrameLayout;
     private EditText mTagEditText;
     private EditText mMemoEditText;
+    private View mSaveButton;
+    private Button mCloseButton;
+    private Button mMinimizeButton;
     private View mFab;
 
     private float mInitialTouchX;
@@ -84,14 +90,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoCreateView, mLayoutParams);
     }
 
-    private void findViews() {
-        mMemoFrameLayout = (FrameLayout) mOverlayMemoCreateView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
-        mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
-        mFab = mOverlayMemoCreateView.findViewById(R.id.overlay_FAB);
-    }
-
     public void saveOverlay(View v) {
+        mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
         final String memo = mMemoEditText.getText().toString();
         final String tag = mTagEditText.getText().toString();
 
@@ -100,6 +100,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     public void closeOverlay(View v) {
         Logger.d(LOG_TAG, "Close");
+        mCloseButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.overlay_button_size_overlay)));
         if (mServiceRunningDetector.isServiceRunning()) {
             stopSelf();
         }
@@ -107,6 +108,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     public void minimizeOverlay(View v) {
         Logger.d(LOG_TAG, "Minimize");
+        mMinimizeButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.overlay_button_size_overlay)));
         mIsOpen = false;
         mMemoFrameLayout.setVisibility(View.GONE);
         mFab.setVisibility(View.VISIBLE);
@@ -125,12 +127,33 @@ public class LayerService extends Service implements View.OnTouchListener {
         return size;
     }
 
+    private AnimationSet buttonAnimation(final float size) {
+        AnimationSet buttonAnim = new AnimationSet(true);
+        ScaleAnimation startAnim = new ScaleAnimation(1.0f, 0.9f, 1.0f, 0.9f, size / 2, size / 2);
+        startAnim.setDuration(500);
+        buttonAnim.addAnimation(startAnim);
+        ScaleAnimation imageEndAnim = new ScaleAnimation(0.9f, 1.1f, 0.9f, 1.1f, size / 2, size / 2);
+        imageEndAnim.setDuration(300);
+        buttonAnim.addAnimation(imageEndAnim);
+        return buttonAnim;
+    }
+
     // Layoutのパラメータの設定
     private void updateLayoutParams(int widthParam, int flagParam, View view) {
         mLayoutParams.width = widthParam;
         mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         mLayoutParams.flags = flagParam;
         mWindowManager.updateViewLayout(view, mLayoutParams);
+    }
+
+    private void findViews() {
+        mMemoFrameLayout = (FrameLayout) mOverlayMemoCreateView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
+        mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
+        mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
+        mSaveButton = mOverlayMemoCreateView.findViewById(R.id.save_FAB_Overlay);
+        mCloseButton = (Button) mOverlayMemoCreateView.findViewById(R.id.close_Button_Overlay);
+        mMinimizeButton = (Button) mOverlayMemoCreateView.findViewById(R.id.minimize_Button_Overlay);
+        mFab = mOverlayMemoCreateView.findViewById(R.id.overlay_FAB);
     }
 
     @Override

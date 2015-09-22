@@ -10,7 +10,7 @@ import com.shohei.put_on.BuildConfig;
  */
 public class Logger {
 
-    private static final String TAG = "MyApplication";
+    private static final String TAG = "PutOn";
 
     public static final void d(String msg) {
         if (BuildConfig.DEBUG) {
