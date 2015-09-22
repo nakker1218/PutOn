@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mServiceRunningDetector = new ServiceRunningDetector(this);
 
         setMemoListView();
-
     }
 
     private void setMemoListView() {
@@ -74,9 +73,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mMemo = mMemoAdapter.getItem(position);
-                Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
-                intent.putExtra("date", mMemo.date);
-                startActivity(intent);
+                if (mSelectedMemoCount > 0) {
+                    mMemoAdapter.changeSelect(mMemo);
+                    changeToolBar();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, MemoDetailActivity.class);
+                    intent.putExtra("date", mMemo.date);
+                    startActivity(intent);
+                }
             }
         });
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -117,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         changeViewColor(mMainToolbar,
                 mCurrentColor,
                 mCurrentColor = getResources().getColor(R.color.primary));
-
     }
 
     private void changeToolBarColorSelect() {
@@ -185,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     public void createMemo(View v) {
         if (!mServiceRunningDetector.isServiceRunning()) {
-
             Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
             finish();
@@ -214,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mMemoAdapter.deleteAll();
             changeToolBar();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
