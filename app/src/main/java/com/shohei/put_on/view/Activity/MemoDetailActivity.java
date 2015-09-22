@@ -54,6 +54,7 @@ public class MemoDetailActivity extends AppCompatActivity implements TextWatcher
         mMemoEditText.addTextChangedListener(this);
 
         setMemo();
+        mMemoEditText.setSelection(mMemo.memo.length());
     }
 
     public void setMemo() {

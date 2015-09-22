@@ -32,7 +32,8 @@
         <activity
             android:name=".view.activity.MemoDetailActivity"
             android:label="@string/title_activity_memo_detail"
-            android:parentActivityName=".view.activity.MainActivity">
+            android:parentActivityName=".view.activity.MainActivity"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <service android:name=".controller.service.LayerService"></service>
     </application>
