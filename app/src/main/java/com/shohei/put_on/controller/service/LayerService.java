@@ -97,7 +97,15 @@ public class LayerService extends Service implements View.OnTouchListener {
         final String tag = mTagEditText.getText().toString();
 
         mMemo.saveMemo(memo, tag);
-        if (!memo.isEmpty()) Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+        if (!memo.isEmpty()) {
+            Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+//            mMemoEditText.getEditableText().clear();
+//            mTagEditText.getEditableText().clear();
+            mMemoEditText.setFocusable(false);
+            mTagEditText.setFocusable(false);
+            mLayoutParams.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
+            mWindowManager.updateViewLayout(mOverlayMemoCreateView, mLayoutParams);
+        }
     }
 
     public void closeOverlay(View v) {
