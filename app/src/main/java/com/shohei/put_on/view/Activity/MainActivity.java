@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         mSearchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQueryHint("Search");
+        mSearchView.setQueryHint(getResources().getString(R.string.title_menu_main_search));
 
         return true;
     }

@@ -41,12 +41,8 @@ public class LayerService extends Service implements View.OnTouchListener {
     private EditText mTagEditText;
     private EditText mMemoEditText;
     private View mSaveButton;
-    private Button mCloseButton;
-    private Button mMinimizeButton;
     private View mFab;
 
-    private float mInitialTouchX;
-    private float mInitialTouchY;
     private int mPositionX;
     private int mPositionY;
     private int mDisplayHeight;
@@ -92,19 +88,13 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     public void saveOverlay(View v) {
-        mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
         final String memo = mMemoEditText.getText().toString();
         final String tag = mTagEditText.getText().toString();
 
         mMemo.saveMemo(memo, tag);
         if (!memo.isEmpty()) {
+            mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
-//            mMemoEditText.getEditableText().clear();
-//            mTagEditText.getEditableText().clear();
-            mMemoEditText.setFocusable(false);
-            mTagEditText.setFocusable(false);
-            mLayoutParams.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
-            mWindowManager.updateViewLayout(mOverlayMemoCreateView, mLayoutParams);
         }
     }
 
@@ -161,8 +151,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
         mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoCreateView.findViewById(R.id.save_FAB_Overlay);
-        mCloseButton = (Button) mOverlayMemoCreateView.findViewById(R.id.close_Button_Overlay);
-        mMinimizeButton = (Button) mOverlayMemoCreateView.findViewById(R.id.minimize_Button_Overlay);
         mFab = mOverlayMemoCreateView.findViewById(R.id.overlay_FAB);
     }
 
@@ -174,6 +162,8 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+        float mInitialTouchX;
+        float mInitialTouchY;
         // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
