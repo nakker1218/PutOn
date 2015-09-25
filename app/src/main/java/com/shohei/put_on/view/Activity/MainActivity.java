@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (!mServiceRunningDetector.isServiceRunning()) {
             Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
-            finish();
         }
     }
 
