@@ -4,7 +4,9 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +16,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.activeandroid.query.Select;
-import com.melnykov.fab.FloatingActionButton;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.service.LayerService;
 import com.shohei.put_on.controller.utils.Logger;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private Toolbar mMainToolbar;
     private ListView mMemoListView;
-    private SearchView mSearchView;
 
     private int mSelectedMemoCount = 0;
     private int mCurrentColor;
@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMainToolbar = (Toolbar) findViewById(R.id.main_Toolbar);
+        mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
-        getSupportActionBar().setElevation(1);
 
         mCurrentColor = getResources().getColor(R.color.primary);
         changeToolBarColorNormal();
@@ -55,8 +54,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.create_FAB);
-        fab.attachToListView(mMemoListView);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabClick();
+            }
+        });
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         changeToolBarColorNormal();
     }
 
-    public void createMemo(View v) {
+    private void fabClick() {
         if (!mServiceRunningDetector.isServiceRunning()) {
             Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
@@ -198,9 +202,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        mSearchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQueryHint(getResources().getString(R.string.title_menu_main_search));
+        SearchView searchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint(getResources().getString(R.string.title_menu_main_search));
 
         return true;
     }
