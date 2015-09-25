@@ -2,45 +2,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.shohei.put_on.view.activity.MemoDetailActivity"
     android:orientation="vertical">
 
+<android.support.design.widget.AppBarLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:theme="@style/AppTheme.AppBarOverlay">
+
     <android.support.v7.widget.Toolbar
-        android:id="@+id/memoDetail_Toolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <EditText
-        android:id="@+id/memo_EditText_Detail"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="top"
-        android:textSize="21sp"
-        android:padding="16dp"
-        android:background="@android:color/transparent"
-        android:textColor="@color/primary_text"
-        android:hint="@string/hint_memo_editText" />
+</android.support.design.widget.AppBarLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/divider" />
+<EditText
+    android:id="@+id/memo_EditText_Detail"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:gravity="top"
+    android:textSize="21sp"
+    android:padding="16dp"
+    android:background="@android:color/transparent"
+    android:textColor="@color/primary_text"
+    android:hint="@string/hint_memo_editText" />
 
-    <EditText
-        android:id="@+id/tag_EditText_Detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textSize="17sp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:background="@android:color/transparent"
-        android:textColor="@color/secondary_text"
-        android:hint="@string/hint_tag_editText" />
+<View
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+    android:background="@color/divider" />
+
+<EditText
+    android:id="@+id/tag_EditText_Detail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:textSize="17sp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:background="@android:color/transparent"
+    android:textColor="@color/secondary_text"
+    android:hint="@string/hint_tag_editText" />
 </LinearLayout>

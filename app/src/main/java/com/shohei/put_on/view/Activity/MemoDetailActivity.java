@@ -31,10 +31,9 @@ public class MemoDetailActivity extends AppCompatActivity implements TextWatcher
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.memoDetail_Toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_toolbar_detail);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(1);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
