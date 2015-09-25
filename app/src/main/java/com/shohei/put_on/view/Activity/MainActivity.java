@@ -4,9 +4,11 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,22 +36,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private MemoAdapter mMemoAdapter;
     private ServiceRunningDetector mServiceRunningDetector;
 
+    private CoordinatorLayout mCoordinatorLayout;
     private Toolbar mMainToolbar;
     private ListView mMemoListView;
+    private Snackbar mSnackBar;
 
     private int mSelectedMemoCount = 0;
     private int mCurrentColor;
+
+    private boolean mIsSelected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_Layout);
+
         mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
 
-        mCurrentColor = getResources().getColor(R.color.primary);
-        changeToolBarColorNormal();
+        mCurrentColor = ContextCompat.getColor(this, R.color.primary);
+        changeStateNormal();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
@@ -105,44 +113,70 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mSelectedMemoCount = mMemoAdapter.getSelectCount();
         if (mSelectedMemoCount > 0) {
             setToolbarIcon(true);
-            changeToolBarColorSelect();
+            changeStateSelect();
         } else {
             setToolbarIcon(false);
-            changeToolBarColorNormal();
+            changeStateNormal();
+            setMemoListView();
         }
     }
 
-    private void changeToolBarColorNormal() {
-        setToolbar(getResources().getString(R.string.app_name),
-                R.mipmap.ic_launcher,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mMemoListView.setSelection(0);
-                    }
-                }
-        );
-        changeViewColor(mMainToolbar,
-                mCurrentColor,
-                mCurrentColor = getResources().getColor(R.color.primary));
+    private void setSnackBar() {
+        if (mIsSelected) {
+            mSnackBar.setText(String.valueOf(mSelectedMemoCount) + "SELECT");
+        } else {
+            mSnackBar = Snackbar.make(mCoordinatorLayout,
+                    String.valueOf(mSelectedMemoCount) + "SELECT",
+                    Snackbar.LENGTH_INDEFINITE);
+            mSnackBar.show();
+            mIsSelected = !mIsSelected;
+        }
+        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSnackBar.dismiss();
+                mSelectedMemoCount = 0;
+                mMemoAdapter.changeSelect(mMemo);
+                setToolbarIcon(false);
+                changeStateNormal();
+                setMemoListView();
+            }
+        });
     }
 
-    private void changeToolBarColorSelect() {
-        setToolbar(String.valueOf(mSelectedMemoCount),
-                R.mipmap.ic_arrow_back,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mSelectedMemoCount = 0;
-                        mMemoAdapter.changeSelect(mMemo);
-                        setToolbarIcon(false);
-                        changeToolBarColorNormal();
-                    }
-                }
+    private void changeStateNormal() {
+        setToolbar(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           mMemoListView.setSelection(0);
+                       }
+                   }
         );
         changeViewColor(mMainToolbar,
                 mCurrentColor,
-                mCurrentColor = getResources().getColor(R.color.accent_red));
+                mCurrentColor = ContextCompat.getColor(this, R.color.primary));
+        if (mIsSelected){
+            mSnackBar.dismiss();
+            mIsSelected = !mIsSelected;
+        }
+    }
+
+    private void changeStateSelect() {
+        setToolbar(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           mSelectedMemoCount = 0;
+                           mMemoAdapter.changeSelect(mMemo);
+                           setToolbarIcon(false);
+                           changeStateNormal();
+                           setMemoListView();
+                       }
+                   }
+        );
+        changeViewColor(mMainToolbar,
+                mCurrentColor,
+                mCurrentColor = ContextCompat.getColor(this, R.color.accent_red));
+        setSnackBar();
     }
 
     private void setToolbarIcon(boolean isSelect) {
@@ -153,9 +187,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         menuSearch.setVisible(!isSelect);
     }
 
-    private void setToolbar(String title, int iconId, View.OnClickListener listener) {
-        mMainToolbar.setTitle(title);
-        mMainToolbar.setNavigationIcon(iconId);
+    private void setToolbar(View.OnClickListener listener) {
+        mMainToolbar.setTitle(getResources().getString(R.string.app_name));
+        mMainToolbar.setNavigationIcon(R.mipmap.ic_puton);
         mMainToolbar.setNavigationOnClickListener(listener);
     }
 
@@ -187,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onStart() {
         super.onStart();
         setMemoListView();
-        changeToolBarColorNormal();
+        changeStateNormal();
     }
 
     private void fabClick() {
