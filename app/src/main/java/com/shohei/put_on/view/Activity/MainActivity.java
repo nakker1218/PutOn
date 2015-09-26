@@ -121,29 +121,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void setSnackBar() {
-        if (mIsSelected) {
-            mSnackBar.setText(String.valueOf(mSelectedMemoCount) + "SELECT");
-        } else {
-            mSnackBar = Snackbar.make(mCoordinatorLayout,
-                    String.valueOf(mSelectedMemoCount) + "SELECT",
-                    Snackbar.LENGTH_INDEFINITE);
-            mSnackBar.show();
-            mIsSelected = !mIsSelected;
-        }
-        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSnackBar.dismiss();
-                mSelectedMemoCount = 0;
-                mMemoAdapter.changeSelect(mMemo);
-                setToolbarIcon(false);
-                changeStateNormal();
-                setMemoListView();
-            }
-        });
-    }
-
     private void changeStateNormal() {
         setToolbar(new View.OnClickListener() {
                        @Override
@@ -191,6 +168,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMainToolbar.setTitle(getResources().getString(R.string.app_name));
         mMainToolbar.setNavigationIcon(R.mipmap.ic_puton);
         mMainToolbar.setNavigationOnClickListener(listener);
+    }
+
+    private void setSnackBar() {
+        if (mIsSelected) {
+            mSnackBar.setText(String.valueOf(mSelectedMemoCount) + "SELECT");
+        } else {
+            mSnackBar = Snackbar.make(mCoordinatorLayout,
+                    String.valueOf(mSelectedMemoCount) + "SELECT",
+                    Snackbar.LENGTH_INDEFINITE);
+            mSnackBar.show();
+            mIsSelected = !mIsSelected;
+        }
+        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSnackBar.dismiss();
+                mSelectedMemoCount = 0;
+                mMemoAdapter.changeSelect(mMemo);
+                setToolbarIcon(false);
+                changeStateNormal();
+                setMemoListView();
+            }
+        });
     }
 
     private void changeViewColor(final View view, final int initialColor, final int finalColor) {
