@@ -11,7 +11,7 @@
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
-    <color name="accent_red">#E91E63</color>
+    <color name="accent_red">#FFE91E63</color>
     <color name="accent_red_dark">#C2185B</color>
     <color name="list_pressed">#6666</color>
 

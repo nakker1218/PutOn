@@ -11,18 +11,18 @@ import com.shohei.put_on.controller.utils.Logger;
 /**
  * Created by nakayamashohei on 15/08/29.
  */
-public class OverlayMemoCreateView extends FrameLayout {
-    private final static String LOG_TAG = OverlayMemoCreateView.class.getSimpleName();
+public class OverlayMemoView extends FrameLayout {
+    private final static String LOG_TAG = OverlayMemoView.class.getSimpleName();
 
-    public OverlayMemoCreateView(Context context) {
+    public OverlayMemoView(Context context) {
         super(context);
     }
 
-    public OverlayMemoCreateView(Context context, AttributeSet attrs) {
+    public OverlayMemoView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public OverlayMemoCreateView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OverlayMemoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

@@ -12,7 +12,9 @@
     <string name="title_menu_main_delete">Delete</string>
     <string name="title_menu_main_search">Search</string>
 
-    <string name="text_save_toast">Save the Memo</string>
+    <string name="text_save_toast">メモが保存されました。</string>
 
-    <string name="text_content_notification">タップでウインドウを表示します。</string>
+    <string name="text_content_notification">タップしてウインドウを表示します。</string>
+
+    <string name="text_dismiss_showcase_view">進む</string>
 </resources>

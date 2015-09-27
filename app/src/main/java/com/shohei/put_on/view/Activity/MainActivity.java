@@ -1,14 +1,13 @@
 package com.shohei.put_on.view.activity;
 
 import android.animation.ValueAnimator;
-import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,18 +30,27 @@ import com.shohei.put_on.view.adapter.MemoAdapter;
 import java.util.Collections;
 import java.util.List;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private static final String SHOWCASE_ID = "PutOn MainActivity";
 
     private Memo mMemo;
     private MemoAdapter mMemoAdapter;
     private ServiceRunningDetector mServiceRunningDetector;
 
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
     private CoordinatorLayout mCoordinatorLayout;
     private Toolbar mMainToolbar;
+    private FloatingActionButton mFab;
     private ListView mMemoListView;
     private Snackbar mSnackBar;
+    private SearchView mSearchView;
 
     private int mSelectedMemoCount = 0;
     private int mCurrentColor;
@@ -65,11 +73,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
         mMemoListView.setEmptyView(findViewById(R.id.listEmpty_TextView));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mSharedPreferences = getSharedPreferences("MainActivity", MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fabClick();
+                if (mSharedPreferences.getBoolean("FAB", false) == false) {
+                    presentShowcaseView(mFab, 100, "メモ作成画面を起動します。");
+
+                    mEditor.putBoolean("FAB", true);
+                    mEditor.commit();
+                } else {
+                    fabClick();
+                }
             }
         });
 
@@ -135,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         changeViewColor(mMainToolbar,
                 mCurrentColor,
                 mCurrentColor = ContextCompat.getColor(this, R.color.primary));
-        if (mIsSelected){
+        if (mIsSelected) {
             mSnackBar.dismiss();
             mIsSelected = !mIsSelected;
         }
@@ -236,14 +254,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
+
+    private void presentShowcaseView(View targetView, int withDelay, String contentText) {
+        new MaterialShowcaseView.Builder(this)
+                .setTarget(targetView)
+                .setDismissText(getResources().getText(R.string.text_dismiss_showcase_view))
+                .setContentText(contentText)
+                .setDelay(withDelay)
+                .singleUse(SHOWCASE_ID)
+                .show();
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
-        searchView.setOnQueryTextListener(this);
-        searchView.setQueryHint(getResources().getString(R.string.title_menu_main_search));
+        mSearchView = (SearchView) menu.findItem(R.id.search_menu).getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setQueryHint(getResources().getString(R.string.title_menu_main_search));
 
         return true;
     }

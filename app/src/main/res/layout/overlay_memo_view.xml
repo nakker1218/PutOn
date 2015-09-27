@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shohei.put_on.view.widget.OverlayMemoCreateView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.shohei.put_on.view.widget.OverlayMemoView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -85,12 +84,20 @@
     <View
         tools:visibility="visible"
         class="com.melnykov.fab.FloatingActionButton"
-        android:id="@+id/overlay_FAB"
+        android:id="@+id/fab_Overlay"
         android:layout_width="@dimen/fab_size_large"
         android:layout_height="@dimen/fab_size_large"
         android:layout_gravity="center"
         android:background="@mipmap/ic_launcher"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
-</com.shohei.put_on.view.widget.OverlayMemoCreateView>
+    <ImageView
+        android:id="@+id/hint_ImageView_Overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/hint_overlay"
+        android:adjustViewBounds="true"
+        android:visibility="gone"/>
+</com.shohei.put_on.view.widget.OverlayMemoView>
 

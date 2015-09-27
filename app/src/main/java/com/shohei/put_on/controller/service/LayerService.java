@@ -3,9 +3,11 @@ package com.shohei.put_on.controller.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.media.Image;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -20,13 +22,14 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.widget.OverlayMemoCreateView;
+import com.shohei.put_on.view.widget.OverlayMemoView;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -37,7 +40,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     public final static int NOTIFICATION_ID = 001;
 
     private Memo mMemo;
-    private OverlayMemoCreateView mOverlayMemoCreateView;
+    private OverlayMemoView mOverlayMemoView;
     private ServiceRunningDetector mServiceRunningDetector;
 
     private WindowManager mWindowManager;
@@ -48,6 +51,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     private EditText mMemoEditText;
     private View mSaveButton;
     private View mFab;
+    public ImageView mHintImageView;
 
     private int mPositionX;
     private int mPositionY;
@@ -64,15 +68,15 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     @Override
     public void onDestroy() {
-        mWindowManager.removeView(mOverlayMemoCreateView);
+        mWindowManager.removeView(mOverlayMemoView);
     }
 
     public void appearOverlayView() {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        mOverlayMemoCreateView = (OverlayMemoCreateView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        mOverlayMemoCreateView.setOnTouchListener(this);
+        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -90,7 +94,23 @@ public class LayerService extends Service implements View.OnTouchListener {
                 PixelFormat.TRANSLUCENT);
 
         mLayoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
-        mWindowManager.addView(mOverlayMemoCreateView, mLayoutParams);
+        mWindowManager.addView(mOverlayMemoView, mLayoutParams);
+
+        firstStartHint();
+    }
+
+    private void firstStartHint(){
+        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
+            mHintImageView.setVisibility(View.VISIBLE);
+
+            editor.putBoolean("OverlayView", true);
+            editor.commit();
+        } else {
+            mHintImageView.setVisibility(View.GONE);
+        }
     }
 
     public void saveOverlay(View v) {
@@ -123,7 +143,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         updateLayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                mOverlayMemoCreateView
+                mOverlayMemoView
         );
     }
 
@@ -176,11 +196,13 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     private void findViews() {
-        mMemoFrameLayout = (FrameLayout) mOverlayMemoCreateView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
-        mMemoEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoCreateView.findViewById(R.id.tag_EditText_Overlay);
-        mSaveButton = mOverlayMemoCreateView.findViewById(R.id.save_FAB_Overlay);
-        mFab = mOverlayMemoCreateView.findViewById(R.id.overlay_FAB);
+        mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
+        mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
+        mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+        mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
+        mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
+
+        mHintImageView = (ImageView) mOverlayMemoView.findViewById(R.id.hint_ImageView_Overlay);
     }
 
     @Override
@@ -193,6 +215,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         float mInitialTouchX;
         float mInitialTouchY;
+        mHintImageView.setVisibility(View.GONE);
         // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -206,7 +229,7 @@ public class LayerService extends Service implements View.OnTouchListener {
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mIsOpen) {
-                    final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoCreateView.getHeight() / 2);
+                    final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoView.getHeight() / 2);
                     mLayoutParams.y = y;
                 } else {
                     final int x = mPositionX - (int) event.getRawX();
