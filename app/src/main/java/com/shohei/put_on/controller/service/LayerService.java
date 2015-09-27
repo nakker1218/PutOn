@@ -157,8 +157,9 @@ public class LayerService extends Service implements View.OnTouchListener {
                 .setContentTitle(getResources().getText(R.string.app_name))
                 .setContentText(getResources().getText(R.string.text_content_notification))
                 .setColor(Color.HSVToColor(hsv))
-                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true);
 
