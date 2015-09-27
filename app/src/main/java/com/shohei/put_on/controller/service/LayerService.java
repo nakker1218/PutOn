@@ -34,7 +34,7 @@ import com.shohei.put_on.view.widget.OverlayMemoCreateView;
 public class LayerService extends Service implements View.OnTouchListener {
     private final static String LOG_TAG = LayerService.class.getSimpleName();
 
-    private final static int NOTIFICATION_MINIMUM_ID = 001;
+    public final static int NOTIFICATION_ID = 001;
 
     private Memo mMemo;
     private OverlayMemoCreateView mOverlayMemoCreateView;
@@ -163,7 +163,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                 .setAutoCancel(true);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-        manager.notify(NOTIFICATION_MINIMUM_ID, builder.build());
+        manager.notify(NOTIFICATION_ID, builder.build());
     }
 
     // Layoutのパラメータの設定

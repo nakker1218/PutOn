@@ -1,12 +1,15 @@
 package com.shohei.put_on.view.activity;
 
 import android.animation.ValueAnimator;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -228,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (!mServiceRunningDetector.isServiceRunning()) {
             Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
             startService(new Intent(MainActivity.this, LayerService.class));
+            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+            manager.cancel(LayerService.NOTIFICATION_ID);
         }
     }
 
