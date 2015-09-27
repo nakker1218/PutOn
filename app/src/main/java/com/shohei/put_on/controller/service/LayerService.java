@@ -1,10 +1,15 @@
 package com.shohei.put_on.controller.service;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,7 +18,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -29,6 +33,8 @@ import com.shohei.put_on.view.widget.OverlayMemoCreateView;
  */
 public class LayerService extends Service implements View.OnTouchListener {
     private final static String LOG_TAG = LayerService.class.getSimpleName();
+
+    private final static int NOTIFICATION_MINIMUM_ID = 001;
 
     private Memo mMemo;
     private OverlayMemoCreateView mOverlayMemoCreateView;
@@ -103,6 +109,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
         if (mServiceRunningDetector.isServiceRunning()) {
             stopSelf();
+            setNotification();
         }
     }
 
@@ -136,6 +143,27 @@ public class LayerService extends Service implements View.OnTouchListener {
         imageEndAnim.setDuration(300);
         buttonAnim.addAnimation(imageEndAnim);
         return buttonAnim;
+    }
+
+    private void setNotification() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(ContextCompat.getColor(this, R.color.primary), hsv);
+
+        Intent intent = new Intent(this, LayerService.class);
+        PendingIntent contentIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.mipmap.ic_notification)
+                .setContentTitle(getResources().getText(R.string.app_name))
+                .setContentText(getResources().getText(R.string.text_content_notification))
+                .setColor(Color.HSVToColor(hsv))
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+        manager.notify(NOTIFICATION_MINIMUM_ID, builder.build());
     }
 
     // Layoutのパラメータの設定

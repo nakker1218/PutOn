@@ -13,4 +13,6 @@
     <string name="title_menu_main_search">Search</string>
 
     <string name="text_save_toast">Save the Memo</string>
+
+    <string name="text_content_notification">タップでウインドウを表示します。</string>
 </resources>

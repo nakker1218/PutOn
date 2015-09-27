@@ -90,7 +90,7 @@
         android:layout_height="@dimen/fab_size_large"
         android:layout_gravity="center"
         android:background="@mipmap/ic_launcher"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
 </com.shohei.put_on.view.widget.OverlayMemoCreateView>
 
