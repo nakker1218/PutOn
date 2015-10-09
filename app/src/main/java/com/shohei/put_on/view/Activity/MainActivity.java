@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onClick(View view) {
                 if (mSharedPreferences.getBoolean("FAB", false) == false) {
-                    presentShowcaseView(mFab, 100, "メモ作成画面を起動します。");
+                    presentShowcaseView(mFab, 100, getResources().getString(R.string.text_content_showcase_fab));
 
                     mEditor.putBoolean("FAB", true);
                     mEditor.commit();
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setToolbar(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           mMemoListView.setSelection(0);
+                           mMemoListView.smoothScrollToPosition(0);
                        }
                    }
         );
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mSnackBar.show();
             mIsSelected = !mIsSelected;
         }
-        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
+        mSnackBar.setAction(getResources().getString(R.string.text_action_snack_bar), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSnackBar.dismiss();

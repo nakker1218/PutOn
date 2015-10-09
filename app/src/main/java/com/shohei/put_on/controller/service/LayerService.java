@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.media.Image;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -51,7 +50,6 @@ public class LayerService extends Service implements View.OnTouchListener {
     private EditText mMemoEditText;
     private View mSaveButton;
     private View mFab;
-    public ImageView mHintImageView;
 
     private int mPositionX;
     private int mPositionY;
@@ -96,21 +94,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         mLayoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
-        firstStartHint();
-    }
-
-    private void firstStartHint(){
-        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
-            mHintImageView.setVisibility(View.VISIBLE);
-
-            editor.putBoolean("OverlayView", true);
-            editor.commit();
-        } else {
-            mHintImageView.setVisibility(View.GONE);
-        }
     }
 
     public void saveOverlay(View v) {
@@ -121,6 +104,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         if (!memo.isEmpty()) {
             mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+            stopSelf();
+            setNotification();
         }
     }
 
@@ -201,8 +186,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
-
-        mHintImageView = (ImageView) mOverlayMemoView.findViewById(R.id.hint_ImageView_Overlay);
     }
 
     @Override
@@ -215,7 +198,6 @@ public class LayerService extends Service implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         float mInitialTouchX;
         float mInitialTouchY;
-        mHintImageView.setVisibility(View.GONE);
         // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {

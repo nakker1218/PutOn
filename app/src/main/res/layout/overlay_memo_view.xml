@@ -28,7 +28,7 @@
                 android:layout_height="@dimen/overlay_memo_edittext_size_height"
                 android:gravity="top"
                 android:textSize="@dimen/text_size_xlarge"
-                android:padding="@dimen/horizontal_margin_normal"
+                android:padding="@dimen/horizontal_margin"
                 android:background="@color/background_memo_editText"
                 android:textColor="@color/hint_memo_editText"
                 android:hint="@string/hint_memo_editText"
@@ -38,8 +38,8 @@
                 android:id="@+id/tag_EditText_Overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/horizontal_margin_normal"
-                android:paddingRight="@dimen/horizontal_margin_normal"
+                android:paddingLeft="@dimen/horizontal_margin"
+                android:paddingRight="@dimen/horizontal_margin"
                 android:paddingTop="@dimen/vertical_margin_small"
                 android:paddingBottom="@dimen/vertical_margin_small"
                 android:textSize="@dimen/text_size_medium"
@@ -55,7 +55,7 @@
             android:layout_width="@dimen/fab_size_small"
             android:layout_height="@dimen/fab_size_small"
             android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/horizontal_margin_normal"
+            android:layout_margin="@dimen/horizontal_margin"
             android:background="@drawable/overlay_background_shape"
             android:onClick="saveOverlay" />
 
