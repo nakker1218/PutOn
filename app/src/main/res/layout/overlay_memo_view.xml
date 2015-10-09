@@ -91,13 +91,5 @@
         android:background="@mipmap/ic_launcher"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/hint_ImageView_Overlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/hint_overlay"
-        android:adjustViewBounds="true"
-        android:visibility="gone"/>
 </com.shohei.put_on.view.widget.OverlayMemoView>
 
