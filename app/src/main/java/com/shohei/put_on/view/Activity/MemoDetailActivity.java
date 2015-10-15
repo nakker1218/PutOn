@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
+import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.model.Memo;
 
 import java.util.List;
@@ -29,7 +30,6 @@ public class MemoDetailActivity extends AppCompatActivity implements TextWatcher
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_memo_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_toolbar_detail);
