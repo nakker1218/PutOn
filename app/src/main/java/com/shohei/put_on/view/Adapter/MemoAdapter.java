@@ -2,18 +2,20 @@ package com.shohei.put_on.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.TextView;
 
-import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
+import com.shohei.put_on.controller.utils.MemoFilter;
 import com.shohei.put_on.model.Memo;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,18 +26,26 @@ import java.util.Set;
 public class MemoAdapter extends ArrayAdapter<Memo> {
     private final static String LOG_TAG = MemoAdapter.class.getSimpleName();
 
+    private int mSelectedColor;
+    private Filter mFilter;
     private LayoutInflater mLayoutInflater;
+    private Set<Memo> mSelectedSet;
+    private int mResourceId;
 
-    private Map<Memo, Boolean> mSelectMap;
-
-    int mResourceId;
 
     public MemoAdapter(Context context, int resource, List<Memo> objects) {
         super(context, resource, objects);
 
-        this.mResourceId = resource;
+        mResourceId = resource;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mSelectMap = new HashMap<>();
+        mSelectedSet = new HashSet<>();
+        mFilter = new MemoFilter(this, objects);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            mSelectedColor = getContext().getColor(R.color.list_pressed);
+        } else {
+            mSelectedColor = getContext().getResources().getColor(R.color.list_pressed);
+        }
     }
 
     @Override
@@ -60,8 +70,8 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         }
         viewHolder.memoTextView.setText(memo.memo);
         viewHolder.dateTextView.setText(memo.date);
-        if (mSelectMap.containsKey(memo) && mSelectMap.get(memo)) {
-            convertView.setBackgroundColor(getContext().getResources().getColor(R.color.list_pressed));
+        if (mSelectedSet.contains(memo)) {
+            convertView.setBackgroundColor(mSelectedColor);
         } else {
             convertView.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -69,43 +79,31 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
     }
 
     public int getSelectCount() {
-        int count = 0;
-        for (Map.Entry<Memo, Boolean> set : mSelectMap.entrySet()) {
-            if (set.getValue()) {
-                count++;
-            }
-        }
-        return count;
+        return mSelectedSet.size();
     }
 
     public void changeSelect(Memo memo) {
-        Logger.d(LOG_TAG, "containsKey: " + mSelectMap.containsKey(memo));
+        Logger.d(LOG_TAG, "containsKey: " + mSelectedSet.contains(memo));
 
-        if (mSelectMap.containsKey(memo)) {
-            mSelectMap.put(memo, !mSelectMap.get(memo));
+        if (mSelectedSet.contains(memo)) {
+            mSelectedSet.remove(memo);
         } else {
-            mSelectMap.put(memo, true);
+            mSelectedSet.add(memo);
         }
         notifyDataSetChanged();
     }
 
     public void deleteAll() {
-        Set<Memo> memos = mSelectMap.keySet();
-        for (Memo memo : memos) {
-            if (mSelectMap.get(memo)) {
-                remove(memo);
-                memo.delete();
-            }
+        for (Memo memo : mSelectedSet) {
+            remove(memo);
         }
-        mSelectMap.clear();
+        mSelectedSet.clear();
         notifyDataSetChanged();
     }
 
-    public static List<Memo> searchTag(String word) {
-        return new Select().from(Memo.class)
-                .where("tag LIKE ?", new Object[]{'%' + word + '%'})
-                .orderBy("tag ASC")
-                .execute();
+    @Override
+    public Filter getFilter() {
+        return mFilter;
     }
 
     private class ViewHolder {

@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -28,7 +30,11 @@ import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
+import com.shohei.put_on.view.adapter.MemoAdapter;
 import com.shohei.put_on.view.widget.OverlayMemoView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -46,7 +52,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     private WindowManager.LayoutParams mLayoutParams;
 
     private FrameLayout mMemoFrameLayout;
-    private EditText mTagEditText;
+    private AutoCompleteTextView mTagEditText;
     private EditText mMemoEditText;
     private View mSaveButton;
     private View mFab;
@@ -93,6 +99,8 @@ public class LayerService extends Service implements View.OnTouchListener {
 
         mLayoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
+
+        setAutoComplete();
 
     }
 
@@ -180,10 +188,22 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
+    private void setAutoComplete(){
+        List<String> list =new ArrayList<String>();
+        list.add("android");
+        list.add("apple");
+        String[] stringArray = list.toArray(new String[list.size()]);
+//        List<Memo> tagList = MemoAdapter.searchTag();
+//        String[] tags = tagList.toArray(new String[tagList.size()]);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stringArray);
+        mTagEditText.setAdapter(adapter);
+    }
+
     private void findViews() {
         mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
         mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+//        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
     }
