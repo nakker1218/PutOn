@@ -7,19 +7,20 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.media.Image;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -30,6 +31,9 @@ import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.widget.OverlayMemoView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -47,11 +51,11 @@ public class LayerService extends Service implements View.OnTouchListener {
     private WindowManager.LayoutParams mLayoutParams;
 
     private FrameLayout mMemoFrameLayout;
-    private EditText mTagEditText;
+    private AutoCompleteTextView mTagEditText;
     private EditText mMemoEditText;
     private View mSaveButton;
+    private ImageView mScrollBarImageView;
     private View mFab;
-    public ImageView mHintImageView;
 
     private int mPositionX;
     private int mPositionY;
@@ -63,6 +67,8 @@ public class LayerService extends Service implements View.OnTouchListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        mOverlayMemoView.setOnTouchListener(this);
         appearOverlayView();
     }
 
@@ -72,11 +78,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     public void appearOverlayView() {
-
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -96,6 +98,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         mLayoutParams.gravity = Gravity.LEFT | Gravity.BOTTOM;
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
+        setAutoComplete();
         firstStartHint();
     }
 
@@ -104,12 +107,12 @@ public class LayerService extends Service implements View.OnTouchListener {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (sharedPreferences.getBoolean("OverlayView", false) == false) {
-            mHintImageView.setVisibility(View.VISIBLE);
+            mScrollBarImageView.setVisibility(View.VISIBLE);
 
             editor.putBoolean("OverlayView", true);
             editor.commit();
         } else {
-            mHintImageView.setVisibility(View.GONE);
+            mScrollBarImageView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -121,6 +124,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         if (!memo.isEmpty()) {
             mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+            stopSelf();
+            setNotification();
         }
     }
 
@@ -167,7 +172,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     private void setNotification() {
         float[] hsv = new float[3];
-        Color.colorToHSV(ContextCompat.getColor(this, R.color.primary), hsv);
+        Color.colorToHSV(getResources().getColor(R.color.primary), hsv);
 
         Intent intent = new Intent(this, LayerService.class);
         PendingIntent contentIntent = PendingIntent.getService(this, 0, intent, 0);
@@ -195,14 +200,22 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
+    private void setAutoComplete() {
+        List<String> list = new ArrayList<>();
+        list.add("android");
+        list.add("apple");
+        String[] stringArray = list.toArray(new String[list.size()]);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, stringArray);
+        mTagEditText.setAdapter(adapter);
+    }
+
     private void findViews() {
         mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
         mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
+        mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
-
-        mHintImageView = (ImageView) mOverlayMemoView.findViewById(R.id.hint_ImageView_Overlay);
     }
 
     @Override
@@ -215,7 +228,6 @@ public class LayerService extends Service implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         float mInitialTouchX;
         float mInitialTouchY;
-        mHintImageView.setVisibility(View.GONE);
         // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -229,6 +241,8 @@ public class LayerService extends Service implements View.OnTouchListener {
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mIsOpen) {
+                    mScrollBarImageView.setVisibility(View.VISIBLE);
+                    mScrollBarImageView.setImageResource(R.drawable.scroll_bar);
                     final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoView.getHeight() / 2);
                     mLayoutParams.y = y;
                 } else {
@@ -255,6 +269,8 @@ public class LayerService extends Service implements View.OnTouchListener {
                             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                             view
                     );
+                } else {
+                    mScrollBarImageView.setVisibility(View.INVISIBLE);
                 }
                 break;
             }

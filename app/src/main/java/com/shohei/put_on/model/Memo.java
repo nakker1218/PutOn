@@ -15,7 +15,7 @@ import java.util.Date;
  * Created by nakayamashohei on 15/08/03.
  */
 @Table(name = "memo_table")
-public class Memo extends Model {
+public class Memo extends Model implements Comparable<Memo> {
     private final static String LOG_TAG = Memo.class.getSimpleName();
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -49,6 +49,17 @@ public class Memo extends Model {
         Date date = new Date(System.currentTimeMillis());
         this.date = Memo.DATE_FORMAT.format(date);
         this.save();
+    }
+
+    @Override
+    public int compareTo(Memo another) {
+        if (this.getUpdateTime().after(another.getUpdateTime())) {
+            return 1;
+        } else if (this.getUpdateTime().before(another.getUpdateTime())) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     //Listのソート

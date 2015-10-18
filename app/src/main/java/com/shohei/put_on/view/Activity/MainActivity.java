@@ -9,7 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,8 +28,6 @@ import com.shohei.put_on.view.adapter.MemoAdapter;
 
 import java.util.Collections;
 import java.util.List;
-
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
 
-        mCurrentColor = ContextCompat.getColor(this, R.color.primary);
+        mCurrentColor = getResources().getColor(R.color.primary);
         changeStateNormal();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
@@ -80,14 +77,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSharedPreferences.getBoolean("FAB", false) == false) {
-                    presentShowcaseView(mFab, 100, "メモ作成画面を起動します。");
-
-                    mEditor.putBoolean("FAB", true);
-                    mEditor.commit();
-                } else {
-                    fabClick();
-                }
+                fabClick();
             }
         });
 
@@ -146,13 +136,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setToolbar(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           mMemoListView.setSelection(0);
+                           mMemoListView.smoothScrollToPosition(0);
                        }
                    }
         );
         changeViewColor(mMainToolbar,
                 mCurrentColor,
-                mCurrentColor = ContextCompat.getColor(this, R.color.primary));
+                mCurrentColor = getResources().getColor(R.color.primary));
         if (mIsSelected) {
             mSnackBar.dismiss();
             mIsSelected = !mIsSelected;
@@ -173,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         );
         changeViewColor(mMainToolbar,
                 mCurrentColor,
-                mCurrentColor = ContextCompat.getColor(this, R.color.accent_red));
+                mCurrentColor = getResources().getColor(R.color.accent_red));
         setSnackBar();
     }
 
@@ -201,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mSnackBar.show();
             mIsSelected = !mIsSelected;
         }
-        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
+        mSnackBar.setAction(getResources().getString(R.string.text_action_snack_bar), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSnackBar.dismiss();
@@ -251,20 +241,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             startService(new Intent(MainActivity.this, LayerService.class));
             NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
             manager.cancel(LayerService.NOTIFICATION_ID);
+            finish();
         }
     }
-
-
-    private void presentShowcaseView(View targetView, int withDelay, String contentText) {
-        new MaterialShowcaseView.Builder(this)
-                .setTarget(targetView)
-                .setDismissText(getResources().getText(R.string.text_dismiss_showcase_view))
-                .setContentText(contentText)
-                .setDelay(withDelay)
-                .singleUse(SHOWCASE_ID)
-                .show();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

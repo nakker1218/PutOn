@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/view_size_xxlarge"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/horizontal_margin_normal"
-    android:paddingRight="@dimen/horizontal_margin_normal"
-    android:paddingTop="@dimen/vertical_margin_normal"
-    android:paddingBottom="@dimen/vertical_margin_normal"
+    android:paddingLeft="@dimen/horizontal_margin"
+    android:paddingRight="@dimen/horizontal_margin"
+    android:paddingTop="@dimen/vertical_margin"
+    android:paddingBottom="@dimen/vertical_margin"
     android:background="@android:color/white">
 
     <TextView

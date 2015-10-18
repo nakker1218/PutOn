@@ -9,12 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/element_spacing_xxxlarge"
-        android:paddingRight="@dimen/element_spacing_xxxlarge"
         android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingRight="@dimen/element_spacing_xxxlarge"
             android:orientation="vertical">
 
             <View
@@ -28,25 +28,26 @@
                 android:layout_height="@dimen/overlay_memo_edittext_size_height"
                 android:gravity="top"
                 android:textSize="@dimen/text_size_xlarge"
-                android:padding="@dimen/horizontal_margin_normal"
+                android:padding="@dimen/horizontal_margin"
                 android:background="@color/background_memo_editText"
                 android:textColor="@color/hint_memo_editText"
                 android:hint="@string/hint_memo_editText"
                 android:textColorHint="@color/hint_memo_editText" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/tag_EditText_Overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/horizontal_margin_normal"
-                android:paddingRight="@dimen/horizontal_margin_normal"
+                android:paddingLeft="@dimen/horizontal_margin"
+                android:paddingRight="@dimen/horizontal_margin"
                 android:paddingTop="@dimen/vertical_margin_small"
                 android:paddingBottom="@dimen/vertical_margin_small"
                 android:textSize="@dimen/text_size_medium"
                 android:background="@color/primary_overlayView"
                 android:textColor="@android:color/white"
                 android:hint="@string/hint_tag_editText"
-                android:textColorHint="@color/hint_tag_editText" />
+                android:textColorHint="@color/hint_tag_editText"
+                android:singleLine="true" />
         </LinearLayout>
 
         <View
@@ -55,7 +56,9 @@
             android:layout_width="@dimen/fab_size_small"
             android:layout_height="@dimen/fab_size_small"
             android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/horizontal_margin_normal"
+            android:layout_marginTop="@dimen/horizontal_margin"
+            android:layout_marginBottom="@dimen/horizontal_margin"
+            android:layout_marginRight="@dimen/vertical_margin_large"
             android:background="@drawable/overlay_background_shape"
             android:onClick="saveOverlay" />
 
@@ -79,6 +82,15 @@
             android:background="@mipmap/ic_hyphen"
             android:onClick="minimizeOverlay" />
 
+        <ImageView
+            tools:visibility="visible"
+            android:id="@+id/scrollBar_ImageView"
+            android:layout_width="@dimen/element_spacing_xxxlarge"
+            android:layout_height="match_parent"
+            android:src="@drawable/scroll_bar"
+            android:scaleType="fitCenter"
+            android:layout_gravity="right"
+            android:visibility="invisible" />
     </FrameLayout>
 
     <View
@@ -91,13 +103,5 @@
         android:background="@mipmap/ic_launcher"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/hint_ImageView_Overlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/hint_overlay"
-        android:adjustViewBounds="true"
-        android:visibility="gone"/>
 </com.shohei.put_on.view.widget.OverlayMemoView>
 
