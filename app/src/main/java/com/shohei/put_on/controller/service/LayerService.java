@@ -3,6 +3,7 @@ package com.shohei.put_on.controller.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -98,7 +99,21 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
         setAutoComplete();
+        firstStartHint();
+    }
 
+    private void firstStartHint(){
+        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
+            mScrollBarImageView.setVisibility(View.VISIBLE);
+
+            editor.putBoolean("OverlayView", true);
+            editor.commit();
+        } else {
+            mScrollBarImageView.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void saveOverlay(View v) {
