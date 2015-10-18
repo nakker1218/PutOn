@@ -12,7 +12,6 @@ import android.widget.EditText;
 
 import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.model.Memo;
 
 import java.util.List;

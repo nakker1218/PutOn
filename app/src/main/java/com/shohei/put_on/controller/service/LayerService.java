@@ -3,14 +3,12 @@ package com.shohei.put_on.controller.service;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,14 +21,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.adapter.MemoAdapter;
 import com.shohei.put_on.view.widget.OverlayMemoView;
 
 import java.util.ArrayList;
@@ -67,6 +63,8 @@ public class LayerService extends Service implements View.OnTouchListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        mOverlayMemoView.setOnTouchListener(this);
         appearOverlayView();
     }
 
@@ -76,11 +74,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     public void appearOverlayView() {
-
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -101,7 +95,6 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
         setAutoComplete();
-
     }
 
     public void saveOverlay(View v) {
@@ -160,7 +153,7 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     private void setNotification() {
         float[] hsv = new float[3];
-        Color.colorToHSV(ContextCompat.getColor(this, R.color.primary), hsv);
+        Color.colorToHSV(getResources().getColor(R.color.primary), hsv);
 
         Intent intent = new Intent(this, LayerService.class);
         PendingIntent contentIntent = PendingIntent.getService(this, 0, intent, 0);
@@ -189,20 +182,17 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     private void setAutoComplete(){
-        List<String> list =new ArrayList<String>();
+        List<String> list =new ArrayList<>();
         list.add("android");
         list.add("apple");
         String[] stringArray = list.toArray(new String[list.size()]);
-//        List<Memo> tagList = MemoAdapter.searchTag();
-//        String[] tags = tagList.toArray(new String[tagList.size()]);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stringArray);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, stringArray);
         mTagEditText.setAdapter(adapter);
     }
 
     private void findViews() {
         mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
         mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-//        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);

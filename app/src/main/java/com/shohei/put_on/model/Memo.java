@@ -55,7 +55,7 @@ public class Memo extends Model implements Comparable<Memo> {
     public int compareTo(Memo another) {
         if (this.getUpdateTime().after(another.getUpdateTime())) {
             return 1;
-        } else if(this.getUpdateTime().before(another.getUpdateTime())) {
+        } else if (this.getUpdateTime().before(another.getUpdateTime())) {
             return -1;
         } else {
             return 0;

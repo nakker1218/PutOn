@@ -9,7 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMainToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mMainToolbar);
 
-        mCurrentColor = ContextCompat.getColor(this, R.color.primary);
+        mCurrentColor = getResources().getColor(R.color.primary);
         changeStateNormal();
 
         mMemoListView = (ListView) findViewById(R.id.memo_ListView);
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         );
         changeViewColor(mMainToolbar,
                 mCurrentColor,
-                mCurrentColor = ContextCompat.getColor(this, R.color.primary));
+                mCurrentColor = getResources().getColor(R.color.primary));
         if (mIsSelected) {
             mSnackBar.dismiss();
             mIsSelected = !mIsSelected;
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         );
         changeViewColor(mMainToolbar,
                 mCurrentColor,
-                mCurrentColor = ContextCompat.getColor(this, R.color.accent_red));
+                mCurrentColor = getResources().getColor(R.color.accent_red));
         setSnackBar();
     }
 
@@ -251,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             startService(new Intent(MainActivity.this, LayerService.class));
             NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
             manager.cancel(LayerService.NOTIFICATION_ID);
+            finish();
         }
     }
 

@@ -2,7 +2,6 @@ package com.shohei.put_on.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.shohei.put_on.model.Memo;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,12 +38,7 @@ public class MemoAdapter extends ArrayAdapter<Memo> {
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSelectedSet = new HashSet<>();
         mFilter = new MemoFilter(this, objects);
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            mSelectedColor = getContext().getColor(R.color.list_pressed);
-        } else {
-            mSelectedColor = getContext().getResources().getColor(R.color.list_pressed);
-        }
+        mSelectedColor = getContext().getResources().getColor(R.color.list_pressed);
     }
 
     @Override
