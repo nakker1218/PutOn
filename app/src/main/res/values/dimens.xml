@@ -1,6 +1,8 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
 
+    <dimen name="horizontal_margin_large">48dp</dimen>
+    <dimen name="vertical_margin_large">48dp</dimen>
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="vertical_margin">16dp</dimen>
     <dimen name="horizontal_margin_normal">14dp</dimen>
@@ -11,8 +13,8 @@
     <dimen name="vertical_margin_tiny">4dp</dimen>
 
     <dimen name="top_margin_overlay_button">14dp</dimen>
-    <dimen name="right_margin_small_overlay_button">12dp</dimen>
-    <dimen name="right_margin_large_overlay_button">46dp</dimen>
+    <dimen name="right_margin_small_overlay_button">44dp</dimen>
+    <dimen name="right_margin_large_overlay_button">78dp</dimen>
 
     <!-- Element Spacing -->
     <dimen name="element_spacing_xxxlarge">32dp</dimen>

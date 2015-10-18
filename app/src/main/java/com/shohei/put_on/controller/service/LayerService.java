@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.shohei.put_on.R;
@@ -51,6 +53,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     private AutoCompleteTextView mTagEditText;
     private EditText mMemoEditText;
     private View mSaveButton;
+    private ImageView mScrollBarImageView;
     private View mFab;
 
     private int mPositionX;
@@ -95,6 +98,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
         setAutoComplete();
+
     }
 
     public void saveOverlay(View v) {
@@ -181,8 +185,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
-    private void setAutoComplete(){
-        List<String> list =new ArrayList<>();
+    private void setAutoComplete() {
+        List<String> list = new ArrayList<>();
         list.add("android");
         list.add("apple");
         String[] stringArray = list.toArray(new String[list.size()]);
@@ -195,6 +199,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
         mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
+        mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
     }
 
@@ -221,6 +226,8 @@ public class LayerService extends Service implements View.OnTouchListener {
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mIsOpen) {
+                    mScrollBarImageView.setVisibility(View.VISIBLE);
+                    mScrollBarImageView.setImageResource(R.drawable.scroll_bar);
                     final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoView.getHeight() / 2);
                     mLayoutParams.y = y;
                 } else {
@@ -247,6 +254,8 @@ public class LayerService extends Service implements View.OnTouchListener {
                             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                             view
                     );
+                } else {
+                    mScrollBarImageView.setVisibility(View.INVISIBLE);
                 }
                 break;
             }
