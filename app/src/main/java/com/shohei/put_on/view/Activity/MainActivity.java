@@ -29,8 +29,6 @@ import com.shohei.put_on.view.adapter.MemoAdapter;
 import java.util.Collections;
 import java.util.List;
 
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
@@ -79,14 +77,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSharedPreferences.getBoolean("FAB", false) == false) {
-                    presentShowcaseView(mFab, 100, getResources().getString(R.string.text_content_showcase_fab));
-
-                    mEditor.putBoolean("FAB", true);
-                    mEditor.commit();
-                } else {
-                    fabClick();
-                }
+                fabClick();
             }
         });
 
@@ -253,18 +244,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             finish();
         }
     }
-
-
-    private void presentShowcaseView(View targetView, int withDelay, String contentText) {
-        new MaterialShowcaseView.Builder(this)
-                .setTarget(targetView)
-                .setDismissText(getResources().getText(R.string.text_dismiss_showcase_view))
-                .setContentText(contentText)
-                .setDelay(withDelay)
-                .singleUse(SHOWCASE_ID)
-                .show();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
