@@ -23,21 +23,20 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".MainActivity"
-        tools:showIn="@layout/activity_main"
-        android:orientation="vertical">
+        tools:showIn="@layout/activity_main">
 
         <ListView
             android:id="@+id/memo_ListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:dividerHeight="0.5dp"
-            android:fadingEdge="none"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:fadingEdge="none" />
 
         <TextView
             android:id="@+id/listEmpty_TextView"
@@ -48,7 +47,7 @@
             android:textColor="@color/secondary_text"
             android:textSize="@dimen/text_size_xxlarge" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
