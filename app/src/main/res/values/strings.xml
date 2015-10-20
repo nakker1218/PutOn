@@ -17,4 +17,17 @@
     <string name="text_content_notification">タップしてウインドウを表示します。</string>
 
     <string name="text_dismiss_showcase_view">進む</string>
+
+    <string name="hint_memo">PutOnへようこそ！\n
+        操作説明\n
+        右下のボタンををまず押すとメモ入力画面が出てきます。メモを入力してください。\n
+        入力が終わったら、右下のチェックマークのボタンを押して保存が出来ます。\n
+        タグもつけることが出来ます。\n
+        右端をスクロールすることでメモ入力画面を動かすことが出来ます。\n
+        \n
+        保存したメモはアプリ画面の右上の検索ボタンを押すことで簡単にメモとタグを検索することが出来ます。\n
+        \n
+        メモを長押しすることでメモを選択し削除することが出来ます。\n</string>
+
+    <string name="hint_tag">PutOn Hint</string>
 </resources>

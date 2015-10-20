@@ -7,8 +7,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.media.Image;
 import android.os.IBinder;
+import android.support.annotation.RequiresPermission;
+import android.support.annotation.UiThread;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,23 +21,30 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
 import com.shohei.put_on.view.widget.OverlayMemoView;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.jar.Manifest;
+
 /**
  * Created by nakayamashohei on 15/08/29.
  */
 public class LayerService extends Service implements View.OnTouchListener {
-    private final static String LOG_TAG = LayerService.class.getSimpleName();
-
     public final static int NOTIFICATION_ID = 001;
 
     private Memo mMemo;
@@ -47,11 +55,11 @@ public class LayerService extends Service implements View.OnTouchListener {
     private WindowManager.LayoutParams mLayoutParams;
 
     private FrameLayout mMemoFrameLayout;
-    private EditText mTagEditText;
     private EditText mMemoEditText;
+    private AutoCompleteTextView mTagEditText;
     private View mSaveButton;
     private View mFab;
-    public ImageView mHintImageView;
+    private ImageView mScrollBarImageView;
 
     private int mPositionX;
     private int mPositionY;
@@ -63,6 +71,8 @@ public class LayerService extends Service implements View.OnTouchListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
+        mOverlayMemoView.setOnTouchListener(this);
         appearOverlayView();
     }
 
@@ -72,11 +82,7 @@ public class LayerService extends Service implements View.OnTouchListener {
     }
 
     public void appearOverlayView() {
-
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
-        mOverlayMemoView = (OverlayMemoView) LayoutInflater.from(this).inflate(R.layout.overlay_memo_view, null);
-        mOverlayMemoView.setOnTouchListener(this);
 
         mMemo = new Memo();
         mServiceRunningDetector = new ServiceRunningDetector(this);
@@ -97,23 +103,24 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.addView(mOverlayMemoView, mLayoutParams);
 
         firstStartHint();
+        setAutoComplete();
     }
 
-    private void firstStartHint(){
+    private void firstStartHint() {
         SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (sharedPreferences.getBoolean("OverlayView", false) == false) {
-            mHintImageView.setVisibility(View.VISIBLE);
+            mScrollBarImageView.setVisibility(View.VISIBLE);
 
             editor.putBoolean("OverlayView", true);
             editor.commit();
         } else {
-            mHintImageView.setVisibility(View.GONE);
+            mScrollBarImageView.setVisibility(View.INVISIBLE);
         }
     }
 
-    public void saveOverlay(View v) {
+    public void saveButtonOverlay(View v) {
         final String memo = mMemoEditText.getText().toString();
         final String tag = mTagEditText.getText().toString();
 
@@ -124,8 +131,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         }
     }
 
-    public void closeOverlay(View v) {
-        Logger.d(LOG_TAG, "Close");
+    public void closeButtonOverlay(View v) {
+        Logger.d(this.getClass(), "Close");
 
         if (mServiceRunningDetector.isServiceRunning()) {
             stopSelf();
@@ -133,8 +140,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         }
     }
 
-    public void minimizeOverlay(View v) {
-        Logger.d(LOG_TAG, "Minimize");
+    public void minimizeButtonOverlay(View v) {
+        Logger.d(this.getClass(), "Minimize");
 
         mIsOpen = false;
         mMemoFrameLayout.setVisibility(View.GONE);
@@ -145,6 +152,17 @@ public class LayerService extends Service implements View.OnTouchListener {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 mOverlayMemoView
         );
+    }
+
+    private void setAutoComplete() {
+        List<Memo> list = mMemo.searchMemo();
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++){
+             tags.add(list.get(i).tag);
+        }
+        String[] stringArray = tags.toArray(new String[tags.size()]);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, stringArray);
+        mTagEditText.setAdapter(adapter);
     }
 
     private Point getDisplaySize() {
@@ -198,11 +216,10 @@ public class LayerService extends Service implements View.OnTouchListener {
     private void findViews() {
         mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
         mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (EditText) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
+        mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
-
-        mHintImageView = (ImageView) mOverlayMemoView.findViewById(R.id.hint_ImageView_Overlay);
     }
 
     @Override
@@ -215,7 +232,6 @@ public class LayerService extends Service implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         float mInitialTouchX;
         float mInitialTouchY;
-        mHintImageView.setVisibility(View.GONE);
         // Viewを動かす
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -229,6 +245,8 @@ public class LayerService extends Service implements View.OnTouchListener {
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mIsOpen) {
+                    mScrollBarImageView.setVisibility(View.VISIBLE);
+                    mScrollBarImageView.setImageResource(R.drawable.scroll_bar);
                     final int y = mDisplayHeight - (int) event.getRawY() - (mOverlayMemoView.getHeight() / 2);
                     mLayoutParams.y = y;
                 } else {
@@ -240,7 +258,7 @@ public class LayerService extends Service implements View.OnTouchListener {
                     mPositionY = (int) event.getRawY();
                     mIsClicked = false;
                 }
-                Logger.d(LOG_TAG, "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
+                Logger.d(this.getClass(), "X:" + mLayoutParams.x + " Y:" + mLayoutParams.y);
                 mWindowManager.updateViewLayout(view, mLayoutParams);
                 break;
             }
@@ -255,6 +273,8 @@ public class LayerService extends Service implements View.OnTouchListener {
                             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                             view
                     );
+                } else {
+                    mScrollBarImageView.setVisibility(View.INVISIBLE);
                 }
                 break;
             }

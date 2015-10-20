@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.service.LayerService;
 import com.shohei.put_on.controller.utils.Logger;
@@ -30,14 +29,8 @@ import com.shohei.put_on.view.adapter.MemoAdapter;
 import java.util.Collections;
 import java.util.List;
 
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    private final static String LOG_TAG = MainActivity.class.getSimpleName();
-
-    private static final String SHOWCASE_ID = "PutOn MainActivity";
-
     private Memo mMemo;
     private MemoAdapter mMemoAdapter;
     private ServiceRunningDetector mServiceRunningDetector;
@@ -80,14 +73,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mSharedPreferences.getBoolean("FAB", false) == false) {
-                    presentShowcaseView(mFab, 100, "メモ作成画面を起動します。");
-
-                    mEditor.putBoolean("FAB", true);
-                    mEditor.commit();
-                } else {
-                    fabClick();
-                }
+                fabClick();
             }
         });
 
@@ -95,10 +81,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mServiceRunningDetector = new ServiceRunningDetector(this);
 
         setMemoListView();
+
+        if (mSharedPreferences.getBoolean("first", false) == false) {
+            mMemo.saveMemo(getString(R.string.hint_memo), getString(R.string.hint_tag));
+
+            mEditor.putBoolean("first", true);
+            mEditor.commit();
+        }
+    }
+
+    private void fabClick() {
+        if (!mServiceRunningDetector.isServiceRunning()) {
+            Logger.d(this.getClass(), "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
+            startService(new Intent(MainActivity.this, LayerService.class));
+            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+            manager.cancel(LayerService.NOTIFICATION_ID);
+            finish();
+
+        }
     }
 
     private void setMemoListView() {
-        List<Memo> memoList = new Select().from(Memo.class).execute();
+        List<Memo> memoList = mMemo.searchMemo();
         Collections.sort(memoList, new Memo.DateTimeComparator());
         mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, memoList);
         mMemoListView.setAdapter(mMemoAdapter);
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mMemoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Logger.d(LOG_TAG, "Position: " + view.getClass().getSimpleName());
+                Logger.d(this.getClass(), "Position: " + view.getClass().getSimpleName());
 
                 mMemo = mMemoAdapter.getItem(position);
                 mMemoAdapter.changeSelect(mMemo);
@@ -245,27 +249,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         changeStateNormal();
     }
 
-    private void fabClick() {
-        if (!mServiceRunningDetector.isServiceRunning()) {
-            Logger.d(LOG_TAG, "ServiceRunning" + mServiceRunningDetector.isServiceRunning());
-            startService(new Intent(MainActivity.this, LayerService.class));
-            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-            manager.cancel(LayerService.NOTIFICATION_ID);
-        }
-    }
-
-
-    private void presentShowcaseView(View targetView, int withDelay, String contentText) {
-        new MaterialShowcaseView.Builder(this)
-                .setTarget(targetView)
-                .setDismissText(getResources().getText(R.string.text_dismiss_showcase_view))
-                .setContentText(contentText)
-                .setDelay(withDelay)
-                .singleUse(SHOWCASE_ID)
-                .show();
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -294,13 +277,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Logger.d(LOG_TAG, "onQueryTextSubmit" + query);
+        Logger.d(this.getClass(), "onQueryTextSubmit" + query);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        Logger.d(LOG_TAG, "onQueryTextChange" + newText);
+        Logger.d(this.getClass(), "onQueryTextChange" + newText);
         mMemoAdapter.getFilter().filter(newText);
         return true;
     }

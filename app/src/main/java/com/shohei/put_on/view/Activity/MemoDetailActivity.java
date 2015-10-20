@@ -17,7 +17,6 @@ import com.shohei.put_on.model.Memo;
 import java.util.List;
 
 public class MemoDetailActivity extends AppCompatActivity implements TextWatcher {
-    private final static String LOG_TAG = MemoDetailActivity.class.getSimpleName();
 
     private Memo mMemo;
 
