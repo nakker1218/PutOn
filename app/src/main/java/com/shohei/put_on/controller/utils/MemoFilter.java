@@ -31,12 +31,12 @@ public class MemoFilter extends Filter {
         FilterResults results = new FilterResults();
         SortedSet<Memo> filteredItems = new TreeSet<>();
 
-        String kana = getKanaString(constraint);
+        String character = getString(constraint);
 
         StringBuilder builder = new StringBuilder();
         builder.append(constraint);
         builder.append("|");
-        builder.append(kana);
+        builder.append(character);
         Pattern pattern = Pattern.compile(builder.toString());
 
         for (Memo memo : mDataSet) {
@@ -60,12 +60,16 @@ public class MemoFilter extends Filter {
         mAdapter.addAll(filters);
     }
 
-    private String getKanaString(CharSequence charSequence) {
+    private String getString(CharSequence charSequence) {
         StringBuffer stringBuffer = new StringBuffer(charSequence);
         for (int i = 0; i < stringBuffer.length(); i++) {
             char c = stringBuffer.charAt(i);
             if (c >= 'ぁ' && c <= 'ん') {
                 stringBuffer.setCharAt(i, (char) (c - 'ぁ' + 'ァ'));
+            } else if (c >= 'a' && c <= 'z') {
+                stringBuffer.setCharAt(i, (char) (c - 'a' + 'A'));
+            } else if (c >= 'A' && c <= 'Z') {
+                stringBuffer.setCharAt(i, (char) (c - 'A' + 'a'));
             }
         }
         return stringBuffer.toString();
