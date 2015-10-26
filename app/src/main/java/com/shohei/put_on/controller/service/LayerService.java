@@ -81,6 +81,7 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.removeView(mOverlayMemoView);
     }
 
+    @RequiresPermission(android.Manifest.permission.SYSTEM_ALERT_WINDOW)
     public void appearOverlayView() {
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
