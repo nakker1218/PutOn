@@ -33,6 +33,7 @@ import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
+import com.shohei.put_on.view.activity.MainActivity;
 import com.shohei.put_on.view.widget.OverlayMemoView;
 
 import java.util.ArrayList;
@@ -129,6 +130,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         if (!memo.isEmpty()) {
             mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+            stopSelf();
+            setNotification();
         }
     }
 
@@ -221,6 +224,8 @@ public class LayerService extends Service implements View.OnTouchListener {
         mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
         mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
         mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
+
+
     }
 
     @Override

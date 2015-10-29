@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void setMemoListView() {
+    public void setMemoListView() {
         List<Memo> memoList = mMemo.searchMemo();
         Collections.sort(memoList, new Memo.DateTimeComparator());
         mMemoAdapter = new MemoAdapter(this, R.layout.memo_adapter, memoList);
