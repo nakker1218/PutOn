@@ -47,6 +47,5 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:scrollHorizontally="true"/>
-
     </LinearLayout>
 </LinearLayout>

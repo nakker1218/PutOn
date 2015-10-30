@@ -16,6 +16,10 @@
 
     <string name="text_content_notification">タップしてウインドウを表示します。</string>
 
+    <string name="text_select_snack_bar">SELECT</string>
+    <string name="text_clear_snack_bar">CLEAR</string>
+
+    <string name="text_content_showcase_fab">メモ作成画面を起動します。</string>
     <string name="text_dismiss_showcase_view">進む</string>
 
     <string name="hint_memo">PutOnへようこそ！\n

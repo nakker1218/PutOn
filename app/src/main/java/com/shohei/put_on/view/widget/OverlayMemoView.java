@@ -12,7 +12,6 @@ import com.shohei.put_on.controller.utils.Logger;
  * Created by nakayamashohei on 15/08/29.
  */
 public class OverlayMemoView extends FrameLayout {
-    private final static String LOG_TAG = OverlayMemoView.class.getSimpleName();
 
     public OverlayMemoView(Context context) {
         super(context);
@@ -31,7 +30,7 @@ public class OverlayMemoView extends FrameLayout {
         // タッチされたら最初に呼ばれる
         // ここでtrueを返せば親ViewのonTouchEvent
         // ここでfalseを返せば子ViewのonClickやらonLongClickやら
-        Logger.d(LOG_TAG, "onInterceptTouchEvent/PointerCount: " + event.getAction());
+        Logger.d(this.getClass(), "onInterceptTouchEvent/PointerCount: " + event.getAction());
         if (event.getPointerCount() == 1) {
             return false;
         }
@@ -42,7 +41,7 @@ public class OverlayMemoView extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
         // ここでtrueを返すとイベントはここで終了
         // ここでfalseを返すと子ViewのonClickやらonLongClickやら
-        Logger.d(LOG_TAG, "onTouchEvent/PointerCount: " + event.getAction());
+        Logger.d(this.getClass(), "onTouchEvent/PointerCount: " + event.getAction());
         if (event.getPointerCount() == 1) {
             return false;
         }

@@ -17,7 +17,6 @@ import com.shohei.put_on.model.Memo;
 import java.util.List;
 
 public class MemoDetailActivity extends AppCompatActivity implements TextWatcher {
-
     private Memo mMemo;
 
     private EditText mTagEditText;

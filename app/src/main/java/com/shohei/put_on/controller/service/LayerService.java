@@ -9,7 +9,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.support.annotation.RequiresPermission;
-import android.support.annotation.UiThread;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,19 +27,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.activity.MainActivity;
 import com.shohei.put_on.view.widget.OverlayMemoView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.jar.Manifest;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -68,6 +62,16 @@ public class LayerService extends Service implements View.OnTouchListener {
 
     private boolean mIsOpen = true;
     private boolean mIsClicked = true;
+
+//    Viewの関連づけ
+    private void findViews() {
+        mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
+        mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
+        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
+        mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
+        mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
+        mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
+    }
 
     @Override
     public void onCreate() {
@@ -108,65 +112,12 @@ public class LayerService extends Service implements View.OnTouchListener {
         setAutoComplete();
     }
 
-    private void firstStartHint() {
-        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
-            mScrollBarImageView.setVisibility(View.VISIBLE);
-
-            editor.putBoolean("OverlayView", true);
-            editor.commit();
-        } else {
-            mScrollBarImageView.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    public void saveButtonOverlay(View v) {
-        final String memo = mMemoEditText.getText().toString();
-        final String tag = mTagEditText.getText().toString();
-
-        mMemo.saveMemo(memo, tag);
-        if (!memo.isEmpty()) {
-            mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
-            Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
-            stopSelf();
-            setNotification();
-        }
-    }
-
-    public void closeButtonOverlay(View v) {
-        Logger.d(this.getClass(), "Close");
-
-        if (mServiceRunningDetector.isServiceRunning()) {
-            stopSelf();
-            setNotification();
-        }
-    }
-
-    public void minimizeButtonOverlay(View v) {
-        Logger.d(this.getClass(), "Minimize");
-
-        mIsOpen = false;
-        mMemoFrameLayout.setVisibility(View.GONE);
-        mFab.setVisibility(View.VISIBLE);
-
-        updateLayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                mOverlayMemoView
-        );
-    }
-
-    private void setAutoComplete() {
-        List<Memo> list = mMemo.searchMemo();
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++){
-             tags.add(list.get(i).tag);
-        }
-        String[] stringArray = tags.toArray(new String[tags.size()]);
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, stringArray);
-        mTagEditText.setAdapter(adapter);
+    // Layoutのパラメータの設定
+    private void updateLayoutParams(int widthParam, int flagParam, View view) {
+        mLayoutParams.width = widthParam;
+        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mLayoutParams.flags = flagParam;
+        mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
     private Point getDisplaySize() {
@@ -176,15 +127,15 @@ public class LayerService extends Service implements View.OnTouchListener {
         return size;
     }
 
-    private AnimationSet buttonAnimation(final float size) {
-        AnimationSet buttonAnim = new AnimationSet(true);
-        ScaleAnimation startAnim = new ScaleAnimation(1.0f, 0.9f, 1.0f, 0.9f, size / 2, size / 2);
-        startAnim.setDuration(500);
-        buttonAnim.addAnimation(startAnim);
-        ScaleAnimation imageEndAnim = new ScaleAnimation(0.9f, 1.1f, 0.9f, 1.1f, size / 2, size / 2);
-        imageEndAnim.setDuration(300);
-        buttonAnim.addAnimation(imageEndAnim);
-        return buttonAnim;
+    private void setAutoComplete() {
+        List<Memo> list = mMemo.searchMemo();
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++){
+            tags.add(list.get(i).tag);
+        }
+        String[] stringArray = tags.toArray(new String[tags.size()]);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, stringArray);
+        mTagEditText.setAdapter(adapter);
     }
 
     private void setNotification() {
@@ -209,23 +160,18 @@ public class LayerService extends Service implements View.OnTouchListener {
         manager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    // Layoutのパラメータの設定
-    private void updateLayoutParams(int widthParam, int flagParam, View view) {
-        mLayoutParams.width = widthParam;
-        mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        mLayoutParams.flags = flagParam;
-        mWindowManager.updateViewLayout(view, mLayoutParams);
-    }
+    private void firstStartHint() {
+        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    private void findViews() {
-        mMemoFrameLayout = (FrameLayout) mOverlayMemoView.findViewById(R.id.memoCreate_FrameLayout_Overlay);
-        mMemoEditText = (EditText) mOverlayMemoView.findViewById(R.id.memo_EditText_Overlay);
-        mTagEditText = (AutoCompleteTextView) mOverlayMemoView.findViewById(R.id.tag_EditText_Overlay);
-        mSaveButton = mOverlayMemoView.findViewById(R.id.save_FAB_Overlay);
-        mScrollBarImageView = (ImageView) mOverlayMemoView.findViewById(R.id.scrollBar_ImageView);
-        mFab = mOverlayMemoView.findViewById(R.id.fab_Overlay);
+        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
+            mScrollBarImageView.setVisibility(View.VISIBLE);
 
-
+            editor.putBoolean("OverlayView", true);
+            editor.commit();
+        } else {
+            mScrollBarImageView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -286,5 +232,55 @@ public class LayerService extends Service implements View.OnTouchListener {
             }
         }
         return false;
+    }
+
+    private AnimationSet buttonAnimation(final float size) {
+        AnimationSet buttonAnim = new AnimationSet(true);
+        ScaleAnimation startAnim = new ScaleAnimation(1.0f, 0.9f, 1.0f, 0.9f, size / 2, size / 2);
+        startAnim.setDuration(500);
+        buttonAnim.addAnimation(startAnim);
+        ScaleAnimation imageEndAnim = new ScaleAnimation(0.9f, 1.1f, 0.9f, 1.1f, size / 2, size / 2);
+        imageEndAnim.setDuration(300);
+        buttonAnim.addAnimation(imageEndAnim);
+        return buttonAnim;
+    }
+
+    //    SaveButtonの処理
+    public void saveButtonOverlay(View v) {
+        final String memo = mMemoEditText.getText().toString();
+        final String tag = mTagEditText.getText().toString();
+
+        mMemo.saveMemo(memo, tag);
+        if (!memo.isEmpty()) {
+            mSaveButton.startAnimation(buttonAnimation(getResources().getDimension(R.dimen.fab_size_small)));
+            Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
+            stopSelf();
+            setNotification();
+        }
+    }
+
+    //    CloseButtonの処理
+    public void closeButtonOverlay(View v) {
+        Logger.d(this.getClass(), "Close");
+
+        if (mServiceRunningDetector.isServiceRunning()) {
+            stopSelf();
+            setNotification();
+        }
+    }
+
+    //    MinimizeButtonの処理
+    public void minimizeButtonOverlay(View v) {
+        Logger.d(this.getClass(), "Minimize");
+
+        mIsOpen = false;
+        mMemoFrameLayout.setVisibility(View.GONE);
+        mFab.setVisibility(View.VISIBLE);
+
+        updateLayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                mOverlayMemoView
+        );
     }
 }

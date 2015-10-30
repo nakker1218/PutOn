@@ -14,7 +14,7 @@ public class ServiceRunningDetector {
     private Context mContext;
 
     public ServiceRunningDetector(Context context) {
-        this.mContext = context;
+        mContext = context;
     }
 
     public boolean isServiceRunning() {

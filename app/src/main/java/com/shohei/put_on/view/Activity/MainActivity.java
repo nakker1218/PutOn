@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setToolbar(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           mMemoListView.setSelection(0);
+                           mMemoListView.smoothScrollToPosition(0);
                        }
                    }
         );
@@ -198,15 +197,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void setSnackBar() {
         if (mIsSelected) {
-            mSnackBar.setText(String.valueOf(mSelectedMemoCount) + "SELECT");
+            mSnackBar.setText(String.valueOf(mSelectedMemoCount) + getResources().getString(R.string.text_select_snack_bar));
         } else {
             mSnackBar = Snackbar.make(mCoordinatorLayout,
-                    String.valueOf(mSelectedMemoCount) + "SELECT",
+                    String.valueOf(mSelectedMemoCount) + getResources().getString(R.string.text_select_snack_bar),
                     Snackbar.LENGTH_INDEFINITE);
             mSnackBar.show();
             mIsSelected = !mIsSelected;
         }
-        mSnackBar.setAction("CLEAR", new View.OnClickListener() {
+        mSnackBar.setAction(getResources().getString(R.string.text_clear_snack_bar), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSnackBar.dismiss();
