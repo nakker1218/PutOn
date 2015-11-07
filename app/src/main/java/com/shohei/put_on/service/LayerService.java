@@ -1,4 +1,4 @@
-package com.shohei.put_on.controller.service;
+package com.shohei.put_on.service;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -120,6 +120,20 @@ public class LayerService extends Service implements View.OnTouchListener {
         mWindowManager.updateViewLayout(view, mLayoutParams);
     }
 
+    private void firstStartHint() {
+        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
+            mScrollBarImageView.setVisibility(View.VISIBLE);
+
+            editor.putBoolean("OverlayView", true);
+            editor.commit();
+        } else {
+            mScrollBarImageView.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private Point getDisplaySize() {
         Display display = mWindowManager.getDefaultDisplay();
         Point size = new Point();
@@ -158,20 +172,6 @@ public class LayerService extends Service implements View.OnTouchListener {
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
         manager.notify(NOTIFICATION_ID, builder.build());
-    }
-
-    private void firstStartHint() {
-        SharedPreferences sharedPreferences = getSharedPreferences("LayerService", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        if (sharedPreferences.getBoolean("OverlayView", false) == false) {
-            mScrollBarImageView.setVisibility(View.VISIBLE);
-
-            editor.putBoolean("OverlayView", true);
-            editor.commit();
-        } else {
-            mScrollBarImageView.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
@@ -256,6 +256,10 @@ public class LayerService extends Service implements View.OnTouchListener {
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
             stopSelf();
             setNotification();
+
+            Intent intent = new Intent();
+            intent.setAction("ACTION_MEMO_SAVED");
+            sendBroadcast(intent);
         }
     }
 

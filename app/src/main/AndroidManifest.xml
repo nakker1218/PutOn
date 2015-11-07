@@ -33,7 +33,7 @@
             android:parentActivityName=".view.activity.MainActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
         </activity>
-        <service android:name=".controller.service.LayerService"></service>
+        <service android:name=".service.LayerService"></service>
     </application>
 
 </manifest>
