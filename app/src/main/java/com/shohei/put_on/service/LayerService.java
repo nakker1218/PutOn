@@ -1,4 +1,4 @@
-package com.shohei.put_on.controller.service;
+package com.shohei.put_on.service;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,7 +9,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.support.annotation.RequiresPermission;
-import android.support.annotation.UiThread;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,19 +27,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.shohei.put_on.R;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.activity.MainActivity;
 import com.shohei.put_on.view.widget.OverlayMemoView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.jar.Manifest;
 
 /**
  * Created by nakayamashohei on 15/08/29.
@@ -132,6 +126,10 @@ public class LayerService extends Service implements View.OnTouchListener {
             Toast.makeText(this, R.string.text_save_toast, Toast.LENGTH_SHORT).show();
             stopSelf();
             setNotification();
+
+            Intent intent = new Intent();
+            intent.setAction("ACTION_MEMO_SAVED");
+            sendBroadcast(intent);
         }
     }
 

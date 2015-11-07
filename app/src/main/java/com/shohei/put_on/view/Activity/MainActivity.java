@@ -1,16 +1,20 @@
 package com.shohei.put_on.view.activity;
 
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,12 +23,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.shohei.put_on.R;
-import com.shohei.put_on.controller.service.LayerService;
 import com.shohei.put_on.controller.utils.Logger;
 import com.shohei.put_on.controller.utils.ServiceRunningDetector;
 import com.shohei.put_on.model.Memo;
+import com.shohei.put_on.service.LayerService;
 import com.shohei.put_on.view.adapter.MemoAdapter;
 
 import java.util.Collections;
@@ -35,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Memo mMemo;
     private MemoAdapter mMemoAdapter;
     private ServiceRunningDetector mServiceRunningDetector;
+
+    private LocalBroadcastManager mLocalBroadcastManager;
+    private BroadcastReceiver mBroadcastReceiver;
 
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
@@ -89,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mEditor.putBoolean("first", true);
             mEditor.commit();
         }
+
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        mBroadcastReceiver = new ServiceReceiver();
     }
 
     private void fabClick() {
@@ -97,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             startService(new Intent(MainActivity.this, LayerService.class));
             NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
             manager.cancel(LayerService.NOTIFICATION_ID);
-            finish();
-
         }
     }
 
@@ -148,34 +157,36 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void changeStateNormal() {
-        setToolbar(new View.OnClickListener() {
-                       @Override
-                       public void onClick(View v) {
-                           mMemoListView.setSelection(0);
-                       }
-                   }
-        );
+        setToolbar(actionNormalListener);
+
         changeViewColor(mMainToolbar,
                 mCurrentColor,
                 mCurrentColor = ContextCompat.getColor(this, R.color.primary));
+
         if (mIsSelected) {
             mSnackBar.dismiss();
             mIsSelected = !mIsSelected;
         }
     }
 
+    View.OnClickListener actionNormalListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mMemoListView.setSelection(0);
+        }
+    };
+
     private void changeStateSelect() {
         setToolbar(new View.OnClickListener() {
-                       @Override
-                       public void onClick(View v) {
-                           mSelectedMemoCount = 0;
-                           mMemoAdapter.changeSelect(mMemo);
-                           setToolbarIcon(false);
-                           changeStateNormal();
-                           setMemoListView();
-                       }
-                   }
-        );
+            @Override
+            public void onClick(View v) {
+                mSelectedMemoCount = 0;
+                mMemoAdapter.changeSelect(mMemo);
+                setToolbarIcon(false);
+                changeStateNormal();
+                setMemoListView();
+            }
+        });
         changeViewColor(mMainToolbar,
                 mCurrentColor,
                 mCurrentColor = ContextCompat.getColor(this, R.color.accent_red));
@@ -251,6 +262,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction("ACTION_MEMO_SAVED");
+        registerReceiver(mBroadcastReceiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(mBroadcastReceiver);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -287,5 +312,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Logger.d(this.getClass(), "onQueryTextChange" + newText);
         mMemoAdapter.getFilter().filter(newText);
         return true;
+    }
+
+    private class ServiceReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setMemoListView();
+        }
     }
 }
