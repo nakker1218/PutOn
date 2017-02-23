@@ -36,6 +36,7 @@ import-summary.txt
 
 # Android Studio
 .idea
+.idea/*.xml
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
