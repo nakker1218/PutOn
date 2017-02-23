@@ -1,4 +1,4 @@
-package com.shohei.put_on.view.widget;
+package me.nakker.put_on.view.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,7 +6,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
-import com.shohei.put_on.controller.utils.Logger;
+import me.nakker.put_on.controller.utils.Logger;
+
 
 /**
  * Created by nakayamashohei on 15/08/29.

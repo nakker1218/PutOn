@@ -1,11 +1,11 @@
-package com.shohei.put_on.controller.utils;
+package me.nakker.put_on.controller.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
 
-import com.shohei.put_on.service.LayerService;
-
 import java.util.List;
+
+import me.nakker.put_on.service.LayerService;
 
 /**
  * Created by nakayamashohei on 15/08/29.

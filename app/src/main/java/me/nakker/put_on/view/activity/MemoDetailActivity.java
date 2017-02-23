@@ -1,4 +1,4 @@
-package com.shohei.put_on.view.activity;
+package me.nakker.put_on.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.activeandroid.query.Select;
-import com.shohei.put_on.R;
-import com.shohei.put_on.model.Memo;
 
 import java.util.List;
+
+import me.nakker.put_on.R;
+import me.nakker.put_on.model.Memo;
+
 
 public class MemoDetailActivity extends AppCompatActivity implements TextWatcher {
     private Memo mMemo;

@@ -1,9 +1,10 @@
-package com.shohei.put_on.controller.utils;
+package me.nakker.put_on.controller.utils;
 
 import android.os.Debug;
 import android.util.Log;
 
-import com.shohei.put_on.BuildConfig;
+import me.nakker.put_on.BuildConfig;
+
 
 /**
  * Created by nakayamashohei on 15/09/19.

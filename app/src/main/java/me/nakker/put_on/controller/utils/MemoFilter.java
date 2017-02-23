@@ -1,16 +1,16 @@
-package com.shohei.put_on.controller.utils;
+package me.nakker.put_on.controller.utils;
 
 import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
-
-import com.shohei.put_on.model.Memo;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+
+import me.nakker.put_on.model.Memo;
 
 /**
  * Created by nakayamashohei on 15/10/09.

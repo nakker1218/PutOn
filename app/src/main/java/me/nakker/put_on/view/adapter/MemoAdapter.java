@@ -1,4 +1,4 @@
-package com.shohei.put_on.view.adapter;
+package me.nakker.put_on.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,14 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
 
-import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.Logger;
-import com.shohei.put_on.controller.utils.MemoFilter;
-import com.shohei.put_on.model.Memo;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import me.nakker.put_on.R;
+import me.nakker.put_on.controller.utils.Logger;
+import me.nakker.put_on.controller.utils.MemoFilter;
+import me.nakker.put_on.model.Memo;
 
 /**
  * Created by nakayamashohei on 15/08/03.

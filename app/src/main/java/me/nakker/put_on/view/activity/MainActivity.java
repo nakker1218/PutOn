@@ -1,4 +1,4 @@
-package com.shohei.put_on.view.activity;
+package me.nakker.put_on.view.activity;
 
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
@@ -23,15 +23,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.Logger;
-import com.shohei.put_on.controller.utils.ServiceRunningDetector;
-import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.service.LayerService;
-import com.shohei.put_on.view.adapter.MemoAdapter;
-
 import java.util.Collections;
 import java.util.List;
+
+import me.nakker.put_on.R;
+import me.nakker.put_on.controller.utils.Logger;
+import me.nakker.put_on.controller.utils.ServiceRunningDetector;
+import me.nakker.put_on.model.Memo;
+import me.nakker.put_on.service.LayerService;
+import me.nakker.put_on.view.adapter.MemoAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {

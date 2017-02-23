@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.shohei.put_on.view.activity.MemoDetailActivity"
+    tools:context=".view.activity.MemoDetailActivity"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout

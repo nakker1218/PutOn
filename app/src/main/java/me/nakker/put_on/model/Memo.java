@@ -1,4 +1,4 @@
-package com.shohei.put_on.model;
+package me.nakker.put_on.model;
 
 import android.text.TextUtils;
 

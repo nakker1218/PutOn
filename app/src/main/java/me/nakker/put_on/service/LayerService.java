@@ -1,4 +1,4 @@
-package com.shohei.put_on.service;
+package me.nakker.put_on.service;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -27,14 +27,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.shohei.put_on.R;
-import com.shohei.put_on.controller.utils.Logger;
-import com.shohei.put_on.controller.utils.ServiceRunningDetector;
-import com.shohei.put_on.model.Memo;
-import com.shohei.put_on.view.widget.OverlayMemoView;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import me.nakker.put_on.R;
+import me.nakker.put_on.controller.utils.Logger;
+import me.nakker.put_on.controller.utils.ServiceRunningDetector;
+import me.nakker.put_on.model.Memo;
+import me.nakker.put_on.view.widget.OverlayMemoView;
 
 /**
  * Created by nakayamashohei on 15/08/29.
